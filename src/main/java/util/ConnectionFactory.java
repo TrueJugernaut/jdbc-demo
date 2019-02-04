@@ -1,11 +1,14 @@
-package connection;
+package util;
 
-import java.sql.Driver;
+import com.mysql.cj.jdbc.Driver;
+
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class Connection {
-    public static final String URL = "jdbc:mysql://localhost:3306/developers    ";
+
+public class ConnectionFactory {
+    public static final String URL = "jdbc:mysql://localhost:3306/developers?serverTimezone=UTC";
     public static final String USER = "root";
     public static final String PASS = "Confection1";
 
