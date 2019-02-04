@@ -14,7 +14,7 @@ import java.util.Set;
 public class Project {
     private Integer id;
     private String name;
-    private Company company;
+    private Set<Company> companies;
     private Customer customer;
     private Set<Developer> developers;
 
