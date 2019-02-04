@@ -1,18 +1,22 @@
 package dao;
 
 import model.Customer;
-import model.Developer;
 
 import java.util.Set;
 
-public interface CustomerDao {
-    Set findAll();
+public interface CustomerDao extends CruidDao<Customer> {
+    @Override
+    Customer findById(Long id);
 
-    Customer findOne(Long id);
+    @Override
+    Set<Customer> findAll();
 
-    void create(Customer customer);
+    @Override
+    void insert(Customer customer);
 
+    @Override
     void update(Customer customer);
 
+    @Override
     void deleteById(Long id);
 }

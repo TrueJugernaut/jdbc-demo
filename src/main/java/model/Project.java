@@ -17,4 +17,8 @@ public class Project {
     private Company company;
     private Customer customer;
     private Set<Developer> developers;
+
+    public void addDeveloper(Developer developer) {
+        developers.add(developer);
+    }
 }

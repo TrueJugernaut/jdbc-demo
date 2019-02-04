@@ -4,14 +4,19 @@ import model.Developer;
 
 import java.util.Set;
 
-public interface DeveloperDao {
-    Set findAll();
+public interface DeveloperDao extends CruidDao<Developer> {
+    @Override
+    Developer findById(Long id);
 
-    Developer findOne(Long id);
+    @Override
+    Set<Developer> findAll();
 
-    void create(Developer developer);
+    @Override
+    void insert(Developer object);
 
-    void update(Developer developer);
+    @Override
+    void update(Developer object);
 
+    @Override
     void deleteById(Long id);
 }

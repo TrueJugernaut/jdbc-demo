@@ -5,14 +5,13 @@ import model.Project;
 
 import java.util.Set;
 
-public interface ProjectDao {
-    Set findAll();
+public interface ProjectDao extends CruidDao<Project>{
+    @Override
+    Project create(Project odject);
 
-    Project findOne(Long id);
+    @Override
+    Project update(Project object);
 
-    void create(Project project);
-
-    void update(Project project);
-
+    @Override
     void deleteById(Long id);
 }

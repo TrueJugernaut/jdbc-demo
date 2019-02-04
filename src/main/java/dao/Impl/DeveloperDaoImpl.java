@@ -17,10 +17,10 @@ import java.util.Set;
 public class DeveloperDaoImpl implements DeveloperDao {
 
     @Override
-    public Developer findOne(Long id) {
+    public Developer findById(Long id) {
         try (Connection connection = ConnectionFactory.getConnection()) {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM user WHERE id=" + id);
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM developer WHERE id=" + id);
             if (resultSet.next()) {
                 return extractDeveloperFromResultSet(resultSet);
             }
@@ -37,7 +37,7 @@ public class DeveloperDaoImpl implements DeveloperDao {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM developer");
 
-            Set developers = new HashSet();
+            Set<Developer> developers = new HashSet<>();
 
             while (resultSet.next()) {
                 Developer developer = extractDeveloperFromResultSet(resultSet);
@@ -52,7 +52,7 @@ public class DeveloperDaoImpl implements DeveloperDao {
     }
 
     @Override
-    public void create(Developer dev) {
+    public void insert(Developer dev) {
         String req = "INSERT into developers.developer VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)";
         insertUpdate(dev, req);
     }
@@ -99,8 +99,6 @@ public class DeveloperDaoImpl implements DeveloperDao {
             preparedStatement.setString(3, dev.getLastName());
             preparedStatement.setString(4, dev.getSex());
             preparedStatement.setDouble(5, dev.getSalary());
-            preparedStatement.setObject(6, dev.getCompanies());
-            preparedStatement.setObject(7, dev.getProjects());
             int i = preparedStatement.executeUpdate();
 
             if (i == 1) {

@@ -21,4 +21,18 @@ public class Developer {
     private Set<Company> companies;
     private Set<Project> projects;
     private Set<Skill> skills;
+
+    public void addSkill(Skill skill) {
+        skill.setOwner(this);
+        skills.add(skill);
+    }
+
+    public void addProject(Project project) {
+        projects.add(project);
+    }
+
+    public void addCompanies(Company company) {
+        companies.add(company);
+    }
+
 }

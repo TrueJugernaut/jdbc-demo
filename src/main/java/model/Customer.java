@@ -16,5 +16,14 @@ public class Customer {
     private String name;
     private String region;
     private Set<Project> projects;
+    private Set<Company> companies;
+
+    public void addProject(Project project) {
+        projects.add(project);
+    }
+
+    public void addCompanies(Company company) {
+        companies.add(company);
+    }
 
 }

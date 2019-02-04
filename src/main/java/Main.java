@@ -35,7 +35,7 @@ public class Main {
                 .projects(projects)
                 .build();
         DeveloperDaoImpl developerDao = new DeveloperDaoImpl();
-        developerDao.create(developer);
+        developerDao.insert(developer);
         System.out.println(developer.toString());
 
     }

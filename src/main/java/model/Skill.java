@@ -13,6 +13,7 @@ public class Skill {
     private Integer id;
     private Technology technology;
     private Seniority seniority;
+    private Developer owner;
 
     private enum Technology {
         JAVA,
