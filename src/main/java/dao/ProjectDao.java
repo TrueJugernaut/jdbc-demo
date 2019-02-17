@@ -7,11 +7,21 @@ import java.util.Set;
 
 public interface ProjectDao extends CruidDao<Project>{
     @Override
-    Project create(Project odject);
+    Project findById(Long id);
 
     @Override
-    Project update(Project object);
+    Set<Project> findAll();
+
+    @Override
+    void insert(Project project);
+
+    @Override
+    void update(Project project);
 
     @Override
     void deleteById(Long id);
+
+    void addDeveloper(Project project, Developer developer);
+
+    void deleteDeveloper(Project project, Developer developer);
 }

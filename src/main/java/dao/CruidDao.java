@@ -7,9 +7,9 @@ public interface CruidDao<T> {
 
     Set<T> findAll();
 
-    void insert(T object);
+    void insert(T t);
 
-    void update(T object);
+    void update(T t);
 
     void deleteById(Long id);
 }

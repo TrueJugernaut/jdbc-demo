@@ -39,7 +39,7 @@ public class CompanyDaoImpl extends AbstractDao implements CompanyDao {
     }
 
     @Override
-    public Company findOne(Long id) {
+    public Company findById(Long id) {
         String req = "SELECT * FROM companies WHERE id=" + id;
         try {
             Statement statement = connection.createStatement();
@@ -57,7 +57,7 @@ public class CompanyDaoImpl extends AbstractDao implements CompanyDao {
     }
 
     @Override
-    public void create(Company company) {
+    public void insert(Company company) {
         String req = "INSERT into developers.developer VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)";
         try {
             insertUpdate(company, req);

@@ -34,9 +34,9 @@ public class Main {
                 .companies(companies)
                 .projects(projects)
                 .build();
-        DeveloperDaoImpl developerDao = new DeveloperDaoImpl();
-        developerDao.insert(developer);
-        System.out.println(developer.toString());
+//        DeveloperDaoImpl developerDao = new DeveloperDaoImpl();
+//        developerDao.insert(developer);
+//        System.out.println(developer.toString());
 
     }
 }
