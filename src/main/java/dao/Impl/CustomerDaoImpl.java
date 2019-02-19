@@ -1,12 +1,11 @@
 package dao.Impl;
 
 import dao.AbstractDao;
-import dao.CruidDao;
 import dao.CustomerDao;
 import model.Customer;
 
 import java.sql.Connection;
-import java.util.Set;
+import java.util.List;
 
 public class CustomerDaoImpl extends AbstractDao implements CustomerDao {
 
@@ -20,7 +19,7 @@ public class CustomerDaoImpl extends AbstractDao implements CustomerDao {
     }
 
     @Override
-    public Set<Customer> findAll() {
+    public List<Customer> findAll() {
         return null;
     }
 

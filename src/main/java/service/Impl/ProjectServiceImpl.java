@@ -5,6 +5,8 @@ import model.Developer;
 import model.Project;
 import service.ProjectService;
 
+import java.util.List;
+
 public class ProjectServiceImpl implements ProjectService {
 
     ProjectDao projectDao;
@@ -16,6 +18,11 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project findById(Long id) {
         return null;
+    }
+
+    @Override
+    public List<Project> findAll() {
+        return projectDao.findAll();
     }
 
     @Override

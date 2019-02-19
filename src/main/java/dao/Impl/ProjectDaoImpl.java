@@ -1,13 +1,12 @@
 package dao.Impl;
 
 import dao.AbstractDao;
-import dao.CruidDao;
 import dao.ProjectDao;
 import model.Developer;
 import model.Project;
 
 import java.sql.Connection;
-import java.util.Set;
+import java.util.List;
 
 public class ProjectDaoImpl extends AbstractDao implements ProjectDao {
 
@@ -21,7 +20,7 @@ public class ProjectDaoImpl extends AbstractDao implements ProjectDao {
     }
 
     @Override
-    public Set<Project> findAll() {
+    public List<Project> findAll() {
         return null;
     }
 

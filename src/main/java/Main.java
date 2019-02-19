@@ -15,6 +15,8 @@ import service.ProjectService;
 import util.ConnectionFactory;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -41,6 +43,10 @@ public class Main {
         companyService.insert(company);
 
         System.out.println(developerService.findById(1L));
+        List<Developer> developers = new ArrayList<>();
+        for (int i = 0; i < developers.size(); i++) {
+            System.out.println(developers.get(i));
+        }
 //        Set<Developer> developers = new HashSet<>();
 //
 //        Set<Project> projects = new HashSet<>();

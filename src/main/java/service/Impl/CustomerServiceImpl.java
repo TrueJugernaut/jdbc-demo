@@ -4,6 +4,8 @@ import dao.CustomerDao;
 import model.Customer;
 import service.CustomerService;
 
+import java.util.List;
+
 public class CustomerServiceImpl implements CustomerService {
 
     private CustomerDao customerDao;
@@ -15,6 +17,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer findById(Long id) {
         return customerDao.findById(id);
+    }
+
+    @Override
+    public List<Customer> findAll() {
+        return customerDao.findAll();
     }
 
     @Override

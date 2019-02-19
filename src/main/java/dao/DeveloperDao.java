@@ -2,6 +2,7 @@ package dao;
 
 import model.Developer;
 
+import java.util.List;
 import java.util.Set;
 
 public interface DeveloperDao extends CruidDao<Developer> {
@@ -9,7 +10,7 @@ public interface DeveloperDao extends CruidDao<Developer> {
     Developer findById(Long id);
 
     @Override
-    Set<Developer> findAll();
+    List<Developer> findAll();
 
     @Override
     void insert(Developer developer);

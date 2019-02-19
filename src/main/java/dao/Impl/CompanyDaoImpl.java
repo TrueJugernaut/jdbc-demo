@@ -5,37 +5,16 @@ import dao.CompanyDao;
 import model.Company;
 import model.Project;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class CompanyDaoImpl extends AbstractDao implements CompanyDao {
 
     public CompanyDaoImpl(Connection connection) {
         super(connection);
-    }
-
-    @Override
-    public Set findAll() {
-        String req = "SELECT * FROM companies";
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(req);
-
-            Set<Company> companies = new HashSet<>();
-            while (resultSet.next()) {
-                Company company = extractCompanyFromResultSet(resultSet);
-                companies.add(company);
-            }
-            return companies;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     @Override
@@ -50,6 +29,25 @@ public class CompanyDaoImpl extends AbstractDao implements CompanyDao {
                 Company company = extractCompanyFromResultSet(resultSet);
                 companies.add(company);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<Company> findAll() {
+        String req = "SELECT * FROM companies";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(req);
+
+            List<Company> companies = new ArrayList<>();
+            while (resultSet.next()) {
+                Company company = extractCompanyFromResultSet(resultSet);
+                companies.add(company);
+            }
+            return companies;
         } catch (SQLException e) {
             e.printStackTrace();
         }

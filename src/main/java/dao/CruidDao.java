@@ -1,11 +1,11 @@
 package dao;
 
-import java.util.Set;
+import java.util.List;
 
 public interface CruidDao<T> {
     T findById(Long id);
 
-    Set<T> findAll();
+    List<T> findAll();
 
     void insert(T t);
 

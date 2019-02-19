@@ -12,7 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class Developer {
-    private Long id;
+    private long id;
     private Integer age;
     private String firstName;
     private String lastName;

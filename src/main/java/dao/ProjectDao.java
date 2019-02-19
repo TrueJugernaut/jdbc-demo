@@ -3,6 +3,7 @@ package dao;
 import model.Developer;
 import model.Project;
 
+import java.util.List;
 import java.util.Set;
 
 public interface ProjectDao extends CruidDao<Project>{
@@ -10,7 +11,7 @@ public interface ProjectDao extends CruidDao<Project>{
     Project findById(Long id);
 
     @Override
-    Set<Project> findAll();
+    List<Project> findAll();
 
     @Override
     void insert(Project project);

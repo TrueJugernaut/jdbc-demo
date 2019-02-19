@@ -6,6 +6,7 @@ import model.*;
 
 import java.sql.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
@@ -16,7 +17,7 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
 
     @Override
     public Developer findById(Long id) {
-        final String SELECT_ALL_DEVELOPERS =
+        final String SELECT_DEVELOPER =
                 "SELECT * FROM developer WHERE id=";
         final String SELECT_ALL_SKILLS =
                 "SELECT * FROM skills WHERE developer_id=";
@@ -29,52 +30,37 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
 
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SELECT_ALL_DEVELOPERS + id);
-
+            ResultSet resultSet = statement.executeQuery(SELECT_DEVELOPER + id);
             if (!resultSet.next()) {
+                System.out.println("Enter");
                 return developer;
             }
-
-//select all skills
-//            developer = getDeveloper(resultSet);
-//            resultSet = statement.executeQuery(SELECT_ALL_SKILLS + id);
-//
-//            while (resultSet.next()) {
-//                developer.addSkill(getSkill(resultSet));
-//            }
-//
-////select all projects
-//            resultSet = statement.executeQuery(SELECT_ALL_PROJECTS + id);
-//            while (resultSet.next()) {
-//                developer.addProject(getProject(resultSet));
-//            }
-//
-////select all companies
-//            resultSet = statement.executeQuery(SELECT_ALL_COMPANIES + id);
-//            while (resultSet.next()) {
-//                developer.addCompanies(getCompany(resultSet));
-//            }
-//            return developer;
-//        } catch (SQLException e) {
-//            System.out.println("Something wrong with util");
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-//
-//    @Override
-//    public Set<Developer> findAll() {
-//
-//        return null;
+            developer = getDeveloper(resultSet);
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return developer;
     }
 
     @Override
-    public Set<Developer> findAll() {
+    public List<Developer> findAll() {
+        final String SELECT_ALL_DEVELOPERS =
+                "SELECT * FROM developer";
+        Set<Developer> developers = new HashSet<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(SELECT_ALL_DEVELOPERS);
+            while (resultSet.next()) {
+                Developer developer = getDeveloper(resultSet);
+                developers.add(developer);
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 
@@ -99,33 +85,6 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
             pr.setString(4, dev.getSex());
             pr.setDouble(5, dev.getSalary());
             pr.execute();
-
-//            ResultSet resultSet = pr.executeQuery(SELECT_LAST_DEVELOPER_INDEX);
-//            resultSet.next();
-//            Long lastDevId = resultSet.getLong("id");
-////Add skills
-//            pr = connection.prepareStatement(INSERT_SKILLS_FOR_DEVELOPER);
-//            for (Skill skill : dev.getSkills()) {
-//                pr.setString(1, String.valueOf(skill.getTechnology()));
-//                pr.setString(2, String.valueOf(skill.getSeniority()));
-//                pr.setLong(3, lastDevId);
-//                pr.execute();
-//            }
-////Dev-Project relations
-//            for (Project project : dev.getProjects()) {
-//                pr = connection.prepareStatement(INSERT_DEVELOPER_PROJECT);
-//                pr.setLong(1, lastDevId);
-//                pr.setLong(2, project.getId());
-//                pr.execute();
-//            }
-////Dev-Comp relations
-//            for (Company company : dev.getCompanies()) {
-//                pr = connection.prepareStatement(INSERT_DEVELOPER_COMPANY);
-//                pr.setLong(1, lastDevId);
-//                pr.setLong(2, company.getId());
-//                pr.execute();
-//            }
-
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -194,9 +153,6 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
                 .lastName(resultSet.getString("lastName"))
                 .sex(resultSet.getString("sex"))
                 .salary(resultSet.getDouble("salary"))
-                .companies(new HashSet<Company>())
-                .projects(new HashSet<Project>())
-                .skills(new HashSet<Skill>())
                 .build();
     }
 
