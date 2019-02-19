@@ -58,9 +58,13 @@ public class CompanyDaoImpl extends AbstractDao implements CompanyDao {
 
     @Override
     public void insert(Company company) {
-        String req = "INSERT into developers.developer VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)";
+        final String INSERT_COMPANY =
+                "INSERT into company(name, countOfEmployee) VALUES (?, ?)";
         try {
-            insertUpdate(company, req);
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_COMPANY);
+            preparedStatement.setString(1, company.getName());
+            preparedStatement.setInt(2, company.getCountOfEmployee());
+            preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }

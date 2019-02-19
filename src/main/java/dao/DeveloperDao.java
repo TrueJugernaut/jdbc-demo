@@ -12,10 +12,10 @@ public interface DeveloperDao extends CruidDao<Developer> {
     Set<Developer> findAll();
 
     @Override
-    void insert(Developer object);
+    void insert(Developer developer);
 
     @Override
-    void update(Developer object);
+    void update(Developer developer);
 
     @Override
     void deleteById(Long id);

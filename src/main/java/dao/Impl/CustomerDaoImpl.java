@@ -1,4 +1,41 @@
 package dao.Impl;
 
-public class CustomerDaoImpl {
+import dao.AbstractDao;
+import dao.CruidDao;
+import dao.CustomerDao;
+import model.Customer;
+
+import java.sql.Connection;
+import java.util.Set;
+
+public class CustomerDaoImpl extends AbstractDao implements CustomerDao {
+
+    public CustomerDaoImpl(Connection connection) {
+        super(connection);
+    }
+
+    @Override
+    public Customer findById(Long id) {
+        return null;
+    }
+
+    @Override
+    public Set<Customer> findAll() {
+        return null;
+    }
+
+    @Override
+    public void insert(Customer customer) {
+
+    }
+
+    @Override
+    public void update(Customer customer) {
+
+    }
+
+    @Override
+    public void deleteById(Long id) {
+
+    }
 }

@@ -6,7 +6,7 @@ import service.CustomerService;
 
 public class CustomerServiceImpl implements CustomerService {
 
-    CustomerDao customerDao;
+    private CustomerDao customerDao;
 
     public CustomerServiceImpl(CustomerDao customerDao) {
         this.customerDao = customerDao;
@@ -14,21 +14,21 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer findById(Long id) {
-        return null;
+        return customerDao.findById(id);
     }
 
     @Override
     public void insert(Customer customer) {
-
+        customerDao.insert(customer);
     }
 
     @Override
     public void update(Customer customer) {
-
+        customerDao.update(customer);
     }
 
     @Override
     public void delete(Long id) {
-
+        customerDao.deleteById(id);
     }
 }

@@ -1,21 +1,10 @@
 package dao.Impl;
 
 import dao.AbstractDao;
-
 import dao.DeveloperDao;
-import model.Company;
-import model.Customer;
-import model.Developer;
-import model.Project;
-import model.Skill;
-import util.ConnectionFactory;
+import model.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import java.sql.Statement;
+import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -47,27 +36,38 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
             }
 
 //select all skills
-            developer = getDeveloper(resultSet);
-            resultSet = statement.executeQuery(SELECT_ALL_SKILLS + id);
+//            developer = getDeveloper(resultSet);
+//            resultSet = statement.executeQuery(SELECT_ALL_SKILLS + id);
+//
+//            while (resultSet.next()) {
+//                developer.addSkill(getSkill(resultSet));
+//            }
+//
+////select all projects
+//            resultSet = statement.executeQuery(SELECT_ALL_PROJECTS + id);
+//            while (resultSet.next()) {
+//                developer.addProject(getProject(resultSet));
+//            }
+//
+////select all companies
+//            resultSet = statement.executeQuery(SELECT_ALL_COMPANIES + id);
+//            while (resultSet.next()) {
+//                developer.addCompanies(getCompany(resultSet));
+//            }
+//            return developer;
+//        } catch (SQLException e) {
+//            System.out.println("Something wrong with util");
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+//
+//    @Override
+//    public Set<Developer> findAll() {
+//
+//        return null;
 
-            while (resultSet.next()) {
-                developer.addSkill(getSkill(resultSet));
-            }
-
-//select all projects
-            resultSet = statement.executeQuery(SELECT_ALL_PROJECTS + id);
-            while (resultSet.next()) {
-                developer.addProject(getProject(resultSet));
-            }
-
-//select all companies
-            resultSet = statement.executeQuery(SELECT_ALL_COMPANIES + id);
-            while (resultSet.next()) {
-                developer.addCompanies(getCompany(resultSet));
-            }
-            return developer;
         } catch (SQLException e) {
-            System.out.println("Something wrong with util");
             e.printStackTrace();
         }
         return null;
@@ -75,9 +75,9 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
 
     @Override
     public Set<Developer> findAll() {
-
         return null;
     }
+
 
     @Override
     public void insert(Developer dev) {
@@ -98,32 +98,33 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
             pr.setString(3, dev.getLastName());
             pr.setString(4, dev.getSex());
             pr.setDouble(5, dev.getSalary());
+            pr.execute();
 
-            ResultSet resultSet = pr.executeQuery(SELECT_LAST_DEVELOPER_INDEX);
-            resultSet.next();
-            Long lastDevId = resultSet.getLong("id");
-//Add skills
-            pr = connection.prepareStatement(INSERT_SKILLS_FOR_DEVELOPER);
-            for (Skill skill : dev.getSkills()) {
-                pr.setString(1, String.valueOf(skill.getTechnology()));
-                pr.setString(2, String.valueOf(skill.getSeniority()));
-                pr.setLong(3, lastDevId);
-                pr.execute();
-            }
-//Dev-Project relations
-            for (Project project : dev.getProjects()) {
-                pr = connection.prepareStatement(INSERT_DEVELOPER_PROJECT);
-                pr.setLong(1, lastDevId);
-                pr.setLong(2, project.getId());
-                pr.execute();
-            }
-//Dev-Comp relations
-            for (Company company : dev.getCompanies()) {
-                pr = connection.prepareStatement(INSERT_DEVELOPER_COMPANY);
-                pr.setLong(1, lastDevId);
-                pr.setLong(2, company.getId());
-                pr.execute();
-            }
+//            ResultSet resultSet = pr.executeQuery(SELECT_LAST_DEVELOPER_INDEX);
+//            resultSet.next();
+//            Long lastDevId = resultSet.getLong("id");
+////Add skills
+//            pr = connection.prepareStatement(INSERT_SKILLS_FOR_DEVELOPER);
+//            for (Skill skill : dev.getSkills()) {
+//                pr.setString(1, String.valueOf(skill.getTechnology()));
+//                pr.setString(2, String.valueOf(skill.getSeniority()));
+//                pr.setLong(3, lastDevId);
+//                pr.execute();
+//            }
+////Dev-Project relations
+//            for (Project project : dev.getProjects()) {
+//                pr = connection.prepareStatement(INSERT_DEVELOPER_PROJECT);
+//                pr.setLong(1, lastDevId);
+//                pr.setLong(2, project.getId());
+//                pr.execute();
+//            }
+////Dev-Comp relations
+//            for (Company company : dev.getCompanies()) {
+//                pr = connection.prepareStatement(INSERT_DEVELOPER_COMPANY);
+//                pr.setLong(1, lastDevId);
+//                pr.setLong(2, company.getId());
+//                pr.execute();
+//            }
 
 
         } catch (SQLException e) {

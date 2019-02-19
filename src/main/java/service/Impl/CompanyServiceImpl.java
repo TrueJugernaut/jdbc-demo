@@ -6,7 +6,7 @@ import service.CompanyService;
 
 public class CompanyServiceImpl implements CompanyService {
 
-    CompanyDao companyDao;
+    private CompanyDao companyDao;
 
     public CompanyServiceImpl(CompanyDao companyDao) {
         this.companyDao = companyDao;
@@ -19,7 +19,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public void insert(Company company) {
-
+        companyDao.insert(company);
     }
 
     @Override
