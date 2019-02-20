@@ -69,7 +69,7 @@ public class CompanyDaoImpl extends AbstractDao implements CompanyDao {
     }
 
     @Override
-    public void update(Company company) {
+    public void update(Company company, Long id) {
         String req = "UPDATE developers.companies SET name=?, count-of-employee=?, projects=? WHERE id=?";
         try {
             insertUpdate(company, req);

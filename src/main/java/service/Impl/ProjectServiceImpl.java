@@ -31,7 +31,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void update(Project project) {
+    public void update(Project project, Long id) {
 
     }
 

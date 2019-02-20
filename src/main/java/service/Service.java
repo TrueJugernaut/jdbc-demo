@@ -9,7 +9,7 @@ public interface Service<T> {
 
     void insert(T t);
 
-    void update(T t);
+    void update(T t, Long id);
 
     void delete(Long id);
 

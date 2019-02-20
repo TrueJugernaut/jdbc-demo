@@ -9,7 +9,7 @@ public interface CruidDao<T> {
 
     void insert(T t);
 
-    void update(T t);
+    void update(T t, Long id);
 
     void deleteById(Long id);
 }

@@ -42,11 +42,22 @@ public class Main {
                 .build();
         companyService.insert(company);
 
-        System.out.println(developerService.findById(1L));
-        List<Developer> developers = new ArrayList<>();
+        System.out.println(developerService.findById(14L));
+        List<Developer> developers = developerService.findAll();
         for (int i = 0; i < developers.size(); i++) {
             System.out.println(developers.get(i));
         }
+
+
+        Developer developer1 = Developer.builder()
+                .age(24)
+                .firstName("Elly")
+                .lastName("Nesterova")
+                .sex("female")
+                .salary(1000.0)
+                .build();
+        developerService.update(developer1, 2L);
+        developerService.deleteAll();
 //        Set<Developer> developers = new HashSet<>();
 //
 //        Set<Project> projects = new HashSet<>();

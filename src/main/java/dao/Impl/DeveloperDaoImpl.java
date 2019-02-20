@@ -5,9 +5,9 @@ import dao.DeveloperDao;
 import model.*;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
 
@@ -17,14 +17,10 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
 
     @Override
     public Developer findById(Long id) {
-        final String SELECT_DEVELOPER =
-                "SELECT * FROM developer WHERE id=";
-        final String SELECT_ALL_SKILLS =
-                "SELECT * FROM skills WHERE developer_id=";
-        final String SELECT_ALL_PROJECTS =
-                "SELECT * FROM developers_projects WHERE developer_id=";
-        final String SELECT_ALL_COMPANIES =
-                "SELECT * FROM developers_companies WHERE developer_id=";
+        final String SELECT_DEVELOPER = "SELECT * FROM developer WHERE id=";
+        final String SELECT_ALL_SKILLS = "SELECT * FROM skills WHERE developer_id=";
+        final String SELECT_ALL_PROJECTS = "SELECT * FROM developers_projects WHERE developer_id=";
+        final String SELECT_ALL_COMPANIES = "SELECT * FROM developers_companies WHERE developer_id=";
 
         Developer developer = null;
 
@@ -32,7 +28,6 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(SELECT_DEVELOPER + id);
             if (!resultSet.next()) {
-                System.out.println("Enter");
                 return developer;
             }
             developer = getDeveloper(resultSet);
@@ -45,9 +40,8 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
 
     @Override
     public List<Developer> findAll() {
-        final String SELECT_ALL_DEVELOPERS =
-                "SELECT * FROM developer";
-        Set<Developer> developers = new HashSet<>();
+        final String SELECT_ALL_DEVELOPERS = "SELECT * FROM developer";
+        List<Developer> developers = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(SELECT_ALL_DEVELOPERS);
@@ -55,18 +49,16 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
                 Developer developer = getDeveloper(resultSet);
                 developers.add(developer);
             }
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return null;
+        return developers;
     }
 
 
     @Override
-    public void insert(Developer dev) {
+    public void insert(Developer developer) {
         final String INSERT_DEVELOPER =
                 "INSERT into developer(age, firstName, lastName, sex, salary) VALUES (?, ?, ?, ?, ?)";
         final String SELECT_LAST_DEVELOPER_INDEX =
@@ -79,11 +71,11 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
                 "INSERT INTO developers_companies(developer_id, companies_id) VALUES (?, ?)";
         try {
             PreparedStatement pr = connection.prepareStatement(INSERT_DEVELOPER);
-            pr.setInt(1, dev.getAge());
-            pr.setString(2, dev.getFirstName());
-            pr.setString(3, dev.getLastName());
-            pr.setString(4, dev.getSex());
-            pr.setDouble(5, dev.getSalary());
+            pr.setInt(1, developer.getAge());
+            pr.setString(2, developer.getFirstName());
+            pr.setString(3, developer.getLastName());
+            pr.setString(4, developer.getSex());
+            pr.setDouble(5, developer.getSalary());
             pr.execute();
 
         } catch (SQLException e) {
@@ -92,29 +84,28 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
     }
 
     @Override
-    public void update(Developer dev) {
+    public void update(Developer dev, Long id) {
 
         final String UPDATE_DEVELOPER =
-                "UPDATE developers SET age=?, firstName=?, lastName=?, sex=?, salary=? WHERE id=?";
+                "UPDATE developer SET age=?, firstName=?, lastName=?, sex=?, salary=? WHERE id=";
         final String UPDATE_SKILLS_FOR_DEVELOPER =
                 "UPDATE skills SET technology=?, seniority=? WHERE id=?";
         try {
-            PreparedStatement pr = connection.prepareStatement(UPDATE_DEVELOPER);
+            PreparedStatement pr = connection.prepareStatement(UPDATE_DEVELOPER + id);
             pr.setInt(1, dev.getAge());
             pr.setString(2, dev.getFirstName());
             pr.setString(3, dev.getLastName());
             pr.setString(4, dev.getSex());
             pr.setDouble(5, dev.getSalary());
-            pr.setLong(6, dev.getId());
             pr.execute();
 //Update skills
-            pr = connection.prepareStatement(UPDATE_SKILLS_FOR_DEVELOPER);
-            for (Skill skill : dev.getSkills()) {
-                pr.setString(1, String.valueOf(skill.getTechnology()));
-                pr.setString(2, String.valueOf(skill.getSeniority()));
-                pr.setLong(3, skill.getId());
-                pr.execute();
-            }
+//            pr = connection.prepareStatement(UPDATE_SKILLS_FOR_DEVELOPER);
+//            for (Skill skill : dev.getSkills()) {
+//                pr.setString(1, String.valueOf(skill.getTechnology()));
+//                pr.setString(2, String.valueOf(skill.getSeniority()));
+//                pr.setLong(3, skill.getId());
+//                pr.execute();
+//            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -125,7 +116,7 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
         final String DELETE_USER_BY_ID =
                 "DELETE FROM developer WHERE id=?";
         final String DELETE_SKILLS_BY_DEV_ID =
-                "DELETE FROM skills WHERE developer_id=?";
+                "DELETE FROM skill WHERE developer_id=?";
         final String DELETE_RELATIONS_WITH_PROJECTS_BY_DEV_ID =
                 "DELETE FROM developers_projects WHERE developer_id=?";
 
@@ -140,6 +131,18 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
             pr = connection.prepareStatement(DELETE_USER_BY_ID);
             pr.setLong(1, id);
             pr.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void deleteAll() {
+        final String DELETE_USERS =
+                "DELETE FROM developer;";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USERS);
+            preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }

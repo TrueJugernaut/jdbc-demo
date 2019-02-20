@@ -29,7 +29,7 @@ public class CustomerDaoImpl extends AbstractDao implements CustomerDao {
     }
 
     @Override
-    public void update(Customer customer) {
+    public void update(Customer customer, Long id) {
 
     }
 

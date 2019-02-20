@@ -16,7 +16,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Company findById(Long id) {
-        return null;
+        return companyDao.findById(id);
     }
 
     @Override
@@ -30,8 +30,8 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public void update(Company company) {
-
+    public void update(Company company, Long id) {
+        companyDao.update(company, id);
     }
 
     @Override

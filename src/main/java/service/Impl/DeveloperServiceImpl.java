@@ -30,12 +30,17 @@ public class DeveloperServiceImpl implements DeveloperService {
     }
 
     @Override
-    public void update(Developer developer) {
-        developerDao.update(developer);
+    public void update(Developer developer, Long id) {
+        developerDao.update(developer, id);
     }
 
     @Override
     public void delete(Long id) {
         developerDao.deleteById(id);
+    }
+
+    @Override
+    public void deleteAll() {
+        developerDao.deleteAll();
     }
 }

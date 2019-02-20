@@ -1173,117 +1173,122 @@
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="294" parent="280" name="firstName">
+    <column id="294" parent="280" name="sex">
       <Position>3</Position>
-      <DataType>varchar(24)|0s</DataType>
+      <DataType>varchar(45)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="295" parent="280" name="lastName">
+    <column id="295" parent="280" name="firstName">
       <Position>4</Position>
       <DataType>varchar(24)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="296" parent="280" name="salary">
+    <column id="296" parent="280" name="lastName">
       <Position>5</Position>
-      <DataType>int(24)|0s</DataType>
+      <DataType>varchar(24)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="297" parent="280" name="company_id">
+    <column id="297" parent="280" name="salary">
       <Position>6</Position>
       <DataType>int(24)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="298" parent="280" name="company_id_idx">
+    <column id="298" parent="280" name="company_id">
+      <Position>7</Position>
+      <DataType>int(24)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="299" parent="280" name="company_id_idx">
       <ColNames>company_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="299" parent="280" name="PRIMARY">
+    <key id="300" parent="280" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="300" parent="280" name="company_id">
+    <foreign-key id="301" parent="280" name="company_id">
       <ColNames>company_id</ColNames>
       <RefSchemaName>jdbc_developers</RefSchemaName>
       <RefTableName>Company</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="301" parent="281" name="id">
+    <column id="302" parent="281" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="302" parent="281" name="name">
+    <column id="303" parent="281" name="name">
       <Position>2</Position>
       <DataType>varchar(45)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="303" parent="281" name="company_id">
+    <column id="304" parent="281" name="company_id">
       <Position>3</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="304" parent="281" name="customer_id">
+    <column id="305" parent="281" name="customer_id">
       <Position>4</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="305" parent="281" name="company_id_idx">
+    <index id="306" parent="281" name="company_id_idx">
       <ColNames>company_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="306" parent="281" name="customer_id_idx">
+    <index id="307" parent="281" name="customer_id_idx">
       <ColNames>customer_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="307" parent="281" name="PRIMARY">
+    <key id="308" parent="281" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="308" parent="281" name="company">
+    <foreign-key id="309" parent="281" name="company">
       <ColNames>company_id</ColNames>
       <RefSchemaName>jdbc_developers</RefSchemaName>
       <RefTableName>company</RefTableName>
       <RefColNames>id</RefColNames>
       <OnUpdate>cascade</OnUpdate>
     </foreign-key>
-    <foreign-key id="309" parent="281" name="customer_id">
+    <foreign-key id="310" parent="281" name="customer_id">
       <ColNames>customer_id</ColNames>
       <RefSchemaName>jdbc_developers</RefSchemaName>
       <RefTableName>customer</RefTableName>
       <RefColNames>id</RefColNames>
       <OnUpdate>cascade</OnUpdate>
     </foreign-key>
-    <column id="310" parent="282" name="id">
+    <column id="311" parent="282" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="311" parent="282" name="technology">
+    <column id="312" parent="282" name="technology">
       <Position>2</Position>
       <DataType>varchar(45)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="312" parent="282" name="seniority">
+    <column id="313" parent="282" name="seniority">
       <Position>3</Position>
       <DataType>varchar(45)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="313" parent="282" name="company_id">
+    <column id="314" parent="282" name="company_id">
       <Position>4</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="314" parent="282" name="company_id_idx">
+    <index id="315" parent="282" name="company_id_idx">
       <ColNames>company_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="315" parent="282" name="PRIMARY">
+    <key id="316" parent="282" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
