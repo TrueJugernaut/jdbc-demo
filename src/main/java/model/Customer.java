@@ -8,24 +8,15 @@ import lombok.NoArgsConstructor;
 import java.util.Set;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Developer {
-    private long id;
-    private Integer age;
-    private String firstName;
-    private String lastName;
-    private String sex;
-    private Double salary;
-    private Set<Company> companies;
+public class Customer {
+    private Integer id;
+    private String name;
+    private String region;
     private Set<Project> projects;
-    private Set<Skill> skills;
-
-    public void addSkill(Skill skill) {
-        skill.setOwner(this);
-        skills.add(skill);
-    }
+    private Set<Company> companies;
 
     public void addProject(Project project) {
         projects.add(project);
