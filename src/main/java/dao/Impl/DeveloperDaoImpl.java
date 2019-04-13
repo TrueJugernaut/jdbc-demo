@@ -17,20 +17,30 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
 
     @Override
     public Developer findById(Long id) {
-        final String SELECT_DEVELOPER = "SELECT * FROM developer WHERE id=";
-        final String SELECT_ALL_SKILLS = "SELECT * FROM skills WHERE developer_id=";
-        final String SELECT_ALL_PROJECTS = "SELECT * FROM developers_projects WHERE developer_id=";
-        final String SELECT_ALL_COMPANIES = "SELECT * FROM developers_companies WHERE developer_id=";
+        final String SELECT_DEVELOPER = "SELECT * FROM developer WHERE id=" + id;
+        final String SELECT_SKILL_ID = "SELECT skill_id FROM developer WHERE id=" + id;
+        final String SELECT_SKILL = "SELECT * FROM skill WHERE id=";
+        final String SELECT_ALL_PROJECTS = "SELECT * FROM projects_developers WHERE developer_id=" + id;
+        final String SELECT_COMPANY = "SELECT company_id FROM developer WHERE developer_id=" + id;
 
         Developer developer = null;
+        Skill skill = null;
+        Company company = null;
+        Project project = null;
 
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SELECT_DEVELOPER + id);
+            ResultSet resultSet = statement.executeQuery(SELECT_DEVELOPER);
             if (!resultSet.next()) {
                 return developer;
             }
             developer = getDeveloper(resultSet);
+
+            resultSet = statement.executeQuery(SELECT_SKILL_ID);
+            Long skillID = resultSet.getLong("id");
+            resultSet = statement.executeQuery(SELECT_SKILL + skillID);
+            skill = getSkill(resultSet);
+            developer.setSkill(skill);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -63,20 +73,21 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
                 "INSERT into developer(age, firstName, lastName, sex, salary) VALUES (?, ?, ?, ?, ?)";
         final String SELECT_LAST_DEVELOPER_INDEX =
                 "SELECT MAX(id) FROM developers";
-        final String INSERT_SKILLS_FOR_DEVELOPER =
-                "INSERT INTO skills(technology, seniority, developer_id) VALUES(?, ?, ?)";
+        final String INSERT_SKILL_FOR_DEVELOPER =
+                "INSERT INTO skill(technology, seniority, developer_id) VALUES(?, ?, ?)";
         final String INSERT_DEVELOPER_PROJECT =
-                "INSERT INTO developers_projects(developer_id, projects_id) VALUES (?, ?)";
+                "INSERT INTO projects_developers(developer_id, projects_id) VALUES (?, ?)";
         final String INSERT_DEVELOPER_COMPANY =
-                "INSERT INTO developers_companies(developer_id, companies_id) VALUES (?, ?)";
+                "INSERT INTO developer (company_id) VALUES (?)";
         try {
-            PreparedStatement pr = connection.prepareStatement(INSERT_DEVELOPER);
-            pr.setInt(1, developer.getAge());
-            pr.setString(2, developer.getFirstName());
-            pr.setString(3, developer.getLastName());
-            pr.setString(4, developer.getSex());
-            pr.setDouble(5, developer.getSalary());
-            pr.execute();
+            insertDeveloper(developer, INSERT_DEVELOPER);
+            PreparedStatement pr;
+
+            Skill skill = null;
+            pr = connection.prepareStatement(INSERT_SKILL_FOR_DEVELOPER);
+            pr.setLong(1, skill.getId());
+            pr.setString(2, String.valueOf(skill.getTechnology()));
+            pr.setString(3, String.valueOf(skill.getSeniority()));
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -87,17 +98,11 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
     public void update(Developer dev, Long id) {
 
         final String UPDATE_DEVELOPER =
-                "UPDATE developer SET age=?, firstName=?, lastName=?, sex=?, salary=? WHERE id=";
+                "UPDATE developer SET age=?, firstName=?, lastName=?, sex=?, salary=? WHERE id=" + id;
         final String UPDATE_SKILLS_FOR_DEVELOPER =
                 "UPDATE skills SET technology=?, seniority=? WHERE id=?";
         try {
-            PreparedStatement pr = connection.prepareStatement(UPDATE_DEVELOPER + id);
-            pr.setInt(1, dev.getAge());
-            pr.setString(2, dev.getFirstName());
-            pr.setString(3, dev.getLastName());
-            pr.setString(4, dev.getSex());
-            pr.setDouble(5, dev.getSalary());
-            pr.execute();
+            insertDeveloper(dev, UPDATE_DEVELOPER);
 //Update skills
 //            pr = connection.prepareStatement(UPDATE_SKILLS_FOR_DEVELOPER);
 //            for (Skill skill : dev.getSkills()) {
@@ -148,6 +153,17 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
         }
     }
 
+
+    private void insertDeveloper(Developer developer, String INSERT_DEVELOPER) throws SQLException {
+        PreparedStatement pr = connection.prepareStatement(INSERT_DEVELOPER);
+        pr.setInt(1, developer.getAge());
+        pr.setString(2, developer.getFirstName());
+        pr.setString(3, developer.getLastName());
+        pr.setString(4, developer.getSex());
+        pr.setDouble(5, developer.getSalary());
+        pr.execute();
+    }
+
     private Developer getDeveloper(ResultSet resultSet) throws SQLException {
         return Developer.builder()
                 .id(resultSet.getLong("id"))
@@ -185,99 +201,4 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
                 .projects(new HashSet<Project>())
                 .build();
     }
-
-//    @Override
-//    public Developer findById(Long id) {
-//        try (Connection connection = ConnectionFactory.getConnection()) {
-//            Statement statement = connection.createStatement();
-//            ResultSet resultSet = statement.executeQuery("SELECT * FROM developer WHERE id=" + id);
-//            if (resultSet.next()) {
-//                return extractDeveloperFromResultSet(resultSet);
-//            }
-//        } catch (SQLException e) {
-//            System.out.println("Something wrong with util");
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-//
-//    @Override
-//    public Set findAll() {
-//        try (Connection connection = ConnectionFactory.getConnection()) {
-//            Statement statement = connection.createStatement();
-//            ResultSet resultSet = statement.executeQuery("SELECT * FROM developer");
-//
-//            Set<Developer> developers = new HashSet<>();
-//
-//            while (resultSet.next()) {
-//                Developer developer = extractDeveloperFromResultSet(resultSet);
-//                developers.add(developer);
-//            }
-//            return developers;
-//        } catch (SQLException e) {
-//            System.out.println("Something wrong with util");
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-//
-//    @Override
-//    public void insert(Developer dev) {
-//        String req = "INSERT into developers.developer VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)";
-//        insertUpdate(dev, req);
-//    }
-//
-//    @Override
-//    public void update(Developer dev) {
-//        String req = "UPDATE developers.developer SET age=?, firstName=?, lastName=?, sex=?, salary=?, company=?, project=? WHERE id=?";
-//        insertUpdate(dev, req);
-//    }
-//
-//    @Override
-//    public void deleteById(Long id) {
-//        try (Connection connection = ConnectionFactory.getConnection()) {
-//            Statement statement = connection.createStatement();
-//            int i = statement.executeUpdate("DELETE FROM developer WHERE id=" + id);
-//
-//            if (i == 1) {
-//                System.out.println("Developer with id " + id + " deleted");
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    private Developer extractDeveloperFromResultSet(ResultSet rs) throws SQLException {
-//        Developer developer = new Developer();
-//
-//        developer.setId(rs.getLong("id"));
-//        developer.setAge(rs.getInt("age"));
-//        developer.setFirstName(rs.getString("firstName"));
-//        developer.setLastName(rs.getString("lastName"));
-//        developer.setSalary(rs.getDouble("salary"));
-//        developer.setCompanies((Set<Company>) rs.getObject("company"));
-//        developer.setProjects((Set<Project>) rs.getObject("project"));
-//        developer.setSex(rs.getString("sex"));
-//        return developer;
-//    }
-//
-//    private void insertUpdate(Developer dev, String req) {
-//        try (Connection connection = ConnectionFactory.getConnection()) {
-//            PreparedStatement preparedStatement = connection.prepareStatement(req);
-//            preparedStatement.setInt(1, dev.getAge());
-//            preparedStatement.setString(2, dev.getFirstName());
-//            preparedStatement.setString(3, dev.getLastName());
-//            preparedStatement.setString(4, dev.getSex());
-//            preparedStatement.setDouble(5, dev.getSalary());
-//            int i = preparedStatement.executeUpdate();
-//
-//            if (i == 1) {
-//                System.out.println("Developer updated/created");
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-
 }

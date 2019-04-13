@@ -19,39 +19,39 @@ public class CompanyDaoImpl extends AbstractDao implements CompanyDao {
 
     @Override
     public Company findById(Long id) {
-        String req = "SELECT * FROM companies WHERE id=" + id;
+        final String SELECT_COMPANY_BY_ID = "SELECT * FROM companies WHERE id=" + id;
+
+        Company company = null;
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(req + id);
-
-            Set<Company> companies = new HashSet<>();
-            while (resultSet.next()) {
-                Company company = extractCompanyFromResultSet(resultSet);
-                companies.add(company);
+            ResultSet resultSet = statement.executeQuery(SELECT_COMPANY_BY_ID);
+            if (!resultSet.next()) {
+                return company;
             }
+            company = getCompany(resultSet);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return company;
     }
 
     @Override
     public List<Company> findAll() {
-        String req = "SELECT * FROM companies";
+        final String SELECT_ALL = "SELECT * FROM Company";
+        List<Company> companies = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(req);
+            ResultSet resultSet = statement.executeQuery(SELECT_ALL);
 
-            List<Company> companies = new ArrayList<>();
             while (resultSet.next()) {
-                Company company = extractCompanyFromResultSet(resultSet);
+                Company company = getCompany(resultSet);
                 companies.add(company);
             }
             return companies;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return companies;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class CompanyDaoImpl extends AbstractDao implements CompanyDao {
 
     @Override
     public void update(Company company, Long id) {
-        String req = "UPDATE developers.companies SET name=?, count-of-employee=?, projects=? WHERE id=?";
+        String req = "UPDATE company SET name=?, countOfEmployee=?, project_id=? WHERE id=";
         try {
             insertUpdate(company, req);
         } catch (SQLException e) {
@@ -80,9 +80,10 @@ public class CompanyDaoImpl extends AbstractDao implements CompanyDao {
 
     @Override
     public void deleteById(Long id) {
+        final String DELET_ALL_COMPANIES = "DELETE FROM companies WHERE id=" + id;
         try {
             Statement statement = connection.createStatement();
-            int i = statement.executeUpdate("DELETE FROM companies WHERE id=" + id);
+            int i = statement.executeUpdate(DELET_ALL_COMPANIES);
 
             if (i == 1) {
                 System.out.println("Companie with id " + id + " deleted");
@@ -93,13 +94,13 @@ public class CompanyDaoImpl extends AbstractDao implements CompanyDao {
 
     }
 
-    private Company extractCompanyFromResultSet(ResultSet rs) throws SQLException {
+    private Company getCompany(ResultSet rs) throws SQLException {
         Company company = new Company();
 
         company.setId(rs.getLong("id"));
         company.setName(rs.getString("name"));
-        company.setProjects((Set<Project>) rs.getObject("projects"));
-        company.setCountOfEmployee(rs.getInt("count-of-employee"));
+        company.setProjects((Set<Project>) rs.getObject("project_id"));
+        company.setCountOfEmployee(rs.getInt("countOfEmployee"));
         return company;
     }
 

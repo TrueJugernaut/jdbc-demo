@@ -10,12 +10,11 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "owner")
+@ToString
 public class Skill {
     private Integer id;
     private Technology technology;
     private Seniority seniority;
-    private Developer owner;
 
     public enum Technology {
         JAVA,

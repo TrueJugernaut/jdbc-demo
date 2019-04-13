@@ -4,6 +4,7 @@ import dao.Impl.DeveloperDaoImpl;
 import dao.Impl.ProjectDaoImpl;
 import model.Company;
 import model.Developer;
+import model.Skill;
 import service.CompanyService;
 import service.CustomerService;
 import service.DeveloperService;
@@ -15,7 +16,6 @@ import service.ProjectService;
 import util.ConnectionFactory;
 
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -26,6 +26,12 @@ public class Main {
         CustomerService customerService = new CustomerServiceImpl(new CustomerDaoImpl(connection));
         ProjectService projectService = new ProjectServiceImpl(new ProjectDaoImpl(connection));
 
+        Skill skill = Skill.builder()
+                .id(1)
+                .technology(Skill.Technology.JAVA)
+                .seniority(Skill.Seniority.JUNIOR)
+                .build();
+
 
         Developer developer = Developer.builder()
                 .age(24)
@@ -33,6 +39,7 @@ public class Main {
                 .lastName("Nesterov")
                 .sex("male")
                 .salary(1200.0)
+                .skill(skill)
                 .build();
         developerService.insert(developer);
 
@@ -40,9 +47,17 @@ public class Main {
                 .name("Peiko")
                 .countOfEmployee(13)
                 .build();
-        companyService.insert(company);
 
-        System.out.println(developerService.findById(14L));
+        companyService.insert(company);
+//        companyService.findById(1L);
+        List<Company> companies = companyService.findAll();
+        for (int i = 0; i < companies.size(); i++) {
+            System.out.println(companies.get(i));
+        }
+
+
+
+        System.out.println(developerService.findById(1L));
         List<Developer> developers = developerService.findAll();
         for (int i = 0; i < developers.size(); i++) {
             System.out.println(developers.get(i));

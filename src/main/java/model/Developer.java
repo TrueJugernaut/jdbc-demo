@@ -18,21 +18,15 @@ public class Developer {
     private String lastName;
     private String sex;
     private Double salary;
-    private Set<Company> companies;
+    private Company company;
     private Set<Project> projects;
-    private Set<Skill> skills;
+    private Skill skill;
 
     public void addSkill(Skill skill) {
-        skill.setOwner(this);
-        skills.add(skill);
+        this.skill = skill;
     }
 
     public void addProject(Project project) {
         projects.add(project);
     }
-
-    public void addCompanies(Company company) {
-        companies.add(company);
-    }
-
 }
