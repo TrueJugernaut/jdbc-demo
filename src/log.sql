@@ -5,6 +5,7 @@ CREATE SCHEMA `jdbc_hw` DEFAULT CHARACTER SET utf8;
 CREATE TABLE `jdbc_hw`.`developers`
 (
   `id`         INT                                                         NOT NULL AUTO_INCREMENT,
+  `age`        INT(11)                                                     NULL,
   `first_name` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL,
   `last_name`  VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL,
   `sex`        VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci'  NOT NULL,

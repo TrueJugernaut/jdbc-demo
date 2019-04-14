@@ -1,9 +1,8 @@
-import dao.Impl.CompanyDaoImpl;
-import dao.Impl.CustomerDaoImpl;
-import dao.Impl.DeveloperDaoImpl;
-import dao.Impl.ProjectDaoImpl;
+import dao.Impl.*;
+import dao.SkillDao;
 import model.Company;
 import model.Developer;
+import model.Project;
 import model.Skill;
 import service.CompanyService;
 import service.CustomerService;
@@ -16,6 +15,7 @@ import service.ProjectService;
 import util.ConnectionFactory;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -25,13 +25,20 @@ public class Main {
         CompanyService companyService = new CompanyServiceImpl(new CompanyDaoImpl(connection));
         CustomerService customerService = new CustomerServiceImpl(new CustomerDaoImpl(connection));
         ProjectService projectService = new ProjectServiceImpl(new ProjectDaoImpl(connection));
+        SkillDao skillDao = new SkillDaoImpl(connection);
 
         Skill skill = Skill.builder()
                 .id(1)
-                .technology(Skill.Technology.JAVA)
-                .seniority(Skill.Seniority.JUNIOR)
+                .technology(Skill.Technology.C_SHARP)
+                .seniority(Skill.Seniority.MIDDLE)
                 .build();
+        skillDao.insert(skill);
+        System.out.println("NEW SKILL: " + skill.toString());
 
+        Company company = Company.builder()
+                .name("Peiko")
+                .countOfEmployee(13)
+                .build();
 
         Developer developer = Developer.builder()
                 .age(24)
@@ -40,16 +47,10 @@ public class Main {
                 .sex("male")
                 .salary(1200.0)
                 .skill(skill)
+                .company(company)
                 .build();
         developerService.insert(developer);
 
-        Company company = Company.builder()
-                .name("Peiko")
-                .countOfEmployee(13)
-                .build();
-
-        companyService.insert(company);
-//        companyService.findById(1L);
         List<Company> companies = companyService.findAll();
         for (int i = 0; i < companies.size(); i++) {
             System.out.println(companies.get(i));
@@ -63,16 +64,19 @@ public class Main {
             System.out.println(developers.get(i));
         }
 
+        Developer developer1 = developerService.findById(16L);
+        System.out.println(developer1.toString());
 
-        Developer developer1 = Developer.builder()
-                .age(24)
-                .firstName("Elly")
-                .lastName("Nesterova")
-                .sex("female")
-                .salary(1000.0)
-                .build();
-        developerService.update(developer1, 2L);
-        developerService.deleteAll();
+
+//        Developer developer1 = Developer.builder()
+//                .age(24)
+//                .firstName("Elly")
+//                .lastName("Borovska")
+//                .sex("female")
+//                .salary(1000.0)
+//                .build();
+//        developerService.update(developer1, 2L);
+//        developerService.deleteAll();
 //        Set<Developer> developers = new HashSet<>();
 //
 //        Set<Project> projects = new HashSet<>();

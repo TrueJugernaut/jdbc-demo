@@ -5,6 +5,8 @@ import dao.SkillDao;
 import model.Skill;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 public class SkillDaoImpl extends AbstractDao implements SkillDao {
@@ -25,7 +27,17 @@ public class SkillDaoImpl extends AbstractDao implements SkillDao {
 
     @Override
     public void insert(Skill skill) {
+        final String INSERT_SKILL = "INSERT INTO skills(technology, seniority) VALUES(?, ?)";
 
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_SKILL);
+            preparedStatement.setString(1, String.valueOf(skill.getTechnology()));
+            preparedStatement.setString(2, String.valueOf(skill.getSeniority()));
+            preparedStatement.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

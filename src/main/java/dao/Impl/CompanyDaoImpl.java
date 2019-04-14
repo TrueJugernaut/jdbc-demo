@@ -37,7 +37,7 @@ public class CompanyDaoImpl extends AbstractDao implements CompanyDao {
 
     @Override
     public List<Company> findAll() {
-        final String SELECT_ALL = "SELECT * FROM Company";
+        final String SELECT_ALL = "SELECT * FROM companies";
         List<Company> companies = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
@@ -57,7 +57,7 @@ public class CompanyDaoImpl extends AbstractDao implements CompanyDao {
     @Override
     public void insert(Company company) {
         final String INSERT_COMPANY =
-                "INSERT into company(name, countOfEmployee) VALUES (?, ?)";
+                "INSERT into companies(name, count_of_employee) VALUES (?, ?)";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_COMPANY);
             preparedStatement.setString(1, company.getName());
@@ -70,9 +70,9 @@ public class CompanyDaoImpl extends AbstractDao implements CompanyDao {
 
     @Override
     public void update(Company company, Long id) {
-        String req = "UPDATE company SET name=?, countOfEmployee=?, project_id=? WHERE id=";
+        final String UPDATE_COMPANY = "UPDATE company SET name=?, count_of_employee=?, project_id=? WHERE id=";
         try {
-            insertUpdate(company, req);
+            insertUpdate(company, UPDATE_COMPANY);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -99,8 +99,8 @@ public class CompanyDaoImpl extends AbstractDao implements CompanyDao {
 
         company.setId(rs.getLong("id"));
         company.setName(rs.getString("name"));
-        company.setProjects((Set<Project>) rs.getObject("project_id"));
-        company.setCountOfEmployee(rs.getInt("countOfEmployee"));
+//        company.setProjects((Set<Project>) rs.getObject("project_id"));
+        company.setCountOfEmployee(rs.getInt("count_of_employee"));
         return company;
     }
 

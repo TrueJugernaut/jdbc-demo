@@ -22,11 +22,8 @@ public class Developer {
     private Set<Project> projects;
     private Skill skill;
 
-    public void addSkill(Skill skill) {
-        this.skill = skill;
-    }
-
     public void addProject(Project project) {
         projects.add(project);
     }
+
 }
