@@ -12,7 +12,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class Skill {
-    private Integer id;
+    private Long id;
     private Technology technology;
     private Seniority seniority;
 

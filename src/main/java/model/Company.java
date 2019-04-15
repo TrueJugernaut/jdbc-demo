@@ -16,8 +16,4 @@ public class Company {
     private String name;
     private Integer countOfEmployee;
     private List<Project> projects;
-
-    public void addProject(Project project) {
-        projects.add(project);
-    }
 }

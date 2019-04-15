@@ -1,4 +1,4 @@
-CREATE SCHEMA `jdbc_hw` DEFAULT CHARACTER SET utf8;
+# CREATE SCHEMA `jdbc_hw` DEFAULT CHARACTER SET utf8;
 
 
 # CREATE developers table
@@ -10,7 +10,6 @@ CREATE TABLE `jdbc_hw`.`developers`
   `last_name`  VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL,
   `sex`        VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci'  NOT NULL,
   `salary`     DOUBLE                                                      NOT NULL,
-  `company_id` INT(11)                                                     NULL,
   `skill_id`   INT(11)                                                     NULL,
   PRIMARY KEY (`id`)
 );
@@ -53,17 +52,11 @@ CREATE TABLE `jdbc_hw`.`customers`
 );
 
 
-# ADD FOREIGN_KEYS developers - skills & company
+# ONE TO MANY developers_skills
 ALTER TABLE `jdbc_hw`.`developers`
-  ADD INDEX `company_id_idx` (`company_id` ASC) VISIBLE,
   ADD INDEX `skill_id_idx` (`skill_id` ASC) VISIBLE;
 ;
 ALTER TABLE `jdbc_hw`.`developers`
-  ADD CONSTRAINT `company_id`
-    FOREIGN KEY (`company_id`)
-      REFERENCES `jdbc_hw`.`companies` (`id`)
-      ON DELETE RESTRICT
-      ON UPDATE CASCADE,
   ADD CONSTRAINT `skill_id`
     FOREIGN KEY (`skill_id`)
       REFERENCES `jdbc_hw`.`skills` (`id`)
@@ -118,6 +111,28 @@ ALTER TABLE `jdbc_hw`.`projects`
       REFERENCES `jdbc_hw`.`customers` (`id`)
       ON DELETE RESTRICT
       ON UPDATE CASCADE;
+
+# MANY TO MANY companies_developers
+CREATE TABLE `jdbc_hw`.`comapanies_developers`
+(
+  `company_id`   INT(11)                                                     NOT NULL,
+  `developer_id` INT(11)                                                     NOT NULL,
+  `status_work`  VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL,
+  `scope`        VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL,
+  INDEX `compan_idx` (`company_id` ASC) VISIBLE,
+  INDEX `devel_idx` (`developer_id` ASC) VISIBLE,
+  CONSTRAINT `compan`
+    FOREIGN KEY (`company_id`)
+      REFERENCES `jdbc_hw`.`companies` (`id`)
+      ON DELETE NO ACTION
+      ON UPDATE NO ACTION,
+  CONSTRAINT `devel`
+    FOREIGN KEY (`developer_id`)
+      REFERENCES `jdbc_hw`.`developers` (`id`)
+      ON DELETE NO ACTION
+      ON UPDATE NO ACTION
+);
+
 
 
 

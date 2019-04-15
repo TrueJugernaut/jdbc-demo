@@ -4,9 +4,7 @@ import dao.AbstractDao;
 import dao.SkillDao;
 import model.Skill;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 
 public class SkillDaoImpl extends AbstractDao implements SkillDao {
@@ -17,7 +15,25 @@ public class SkillDaoImpl extends AbstractDao implements SkillDao {
 
     @Override
     public Skill findById(Long id) {
-        return null;
+        final String SELECT_SKILL_BY_ID = "SELECT * FROM skills WHERE id=" + id;
+
+        Skill skill = new Skill();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(SELECT_SKILL_BY_ID);
+            if (resultSet.next()) {
+                skill = Skill.builder()
+                        .id(resultSet.getLong("id"))
+                        .technology(Skill.Technology.valueOf(resultSet.getString("technology")))
+                        .seniority(Skill.Seniority.valueOf(resultSet.getString("seniority")))
+                        .build();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e1) {
+            System.out.println("Object Skill with id=" + id + " does not exist");
+        }
+        return skill;
     }
 
     @Override

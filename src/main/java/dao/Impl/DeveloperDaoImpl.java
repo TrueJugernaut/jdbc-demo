@@ -2,6 +2,7 @@ package dao.Impl;
 
 import dao.AbstractDao;
 import dao.DeveloperDao;
+import dao.SkillDao;
 import model.*;
 
 import java.sql.*;
@@ -20,14 +21,15 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
         final String SELECT_DEVELOPER = "SELECT * FROM developers WHERE id=" + id;
         final String SELECT_SKILL_ID = "SELECT skill_id FROM developers WHERE id=" + id;
         final String SELECT_SKILL = "SELECT * FROM skills WHERE id=";
-        final String SELECT_ALL_PROJECTS = "SELECT * FROM developers_projects WHERE developer_id=" + id;
+        final String SELECT_ALL_PROJECTS_ID = "SELECT * FROM developers_projects WHERE developer_id=" + id;
+        final String SELECT_ALL_PROJECTS = "";
         final String SELECT_COMPANY_ID = "SELECT company_id FROM developers WHERE id=" + id;
         final String SELECT_COMPANY = "SELECT * FROM companies WHERE id=";
 
-        Developer developer = null;
-        Skill skill = null;
-        Company company = null;
-        Project project = null;
+        Developer developer = new Developer();
+        Skill skill = new Skill();
+        Company company = new Company();
+        List<Project> projects = new ArrayList<>();
 
         try {
             Statement statement = connection.createStatement();
@@ -35,7 +37,7 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
             if (!resultSet.next()) return developer;
             developer = getDeveloper(resultSet);
 
-//Get Skill id
+//Select Skill id
             resultSet = statement.executeQuery(SELECT_SKILL_ID);
             long skillId = 0;
             if (resultSet.next()) skillId = resultSet.getLong("skill_id");
@@ -45,7 +47,7 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
             resultSet = statement.executeQuery(SELECT_SKILL + skillId);
             if (resultSet.next()) developer.setSkill(getSkill(resultSet));
 
-//Get Company id
+//Select Company id
             resultSet = statement.executeQuery(SELECT_COMPANY_ID);
             long companyId = 0;
             if (resultSet.next()) companyId = resultSet.getLong("company_id");
@@ -53,8 +55,17 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
             resultSet = statement.executeQuery(SELECT_COMPANY + companyId);
             if (resultSet.next()) developer.setCompany(getCompany(resultSet));
 
+//Select all projects
+            List<Long> ids = new ArrayList<>();
+            resultSet = statement.executeQuery(SELECT_ALL_PROJECTS_ID);
+            while (resultSet.next()) {
+                ids.add(resultSet.getLong("project_id"));
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (NullPointerException e1) {
+            System.out.println("Object Developer with id=" + id + " does not exist");
         }
         return developer;
     }
@@ -126,7 +137,7 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
 //        final String UPDATE_SKILLS_FOR_DEVELOPER =
 //                "UPDATE skills SET technology=?, seniority=? WHERE id=?";
 //        try {
-//            insertDeveloper(dev, UPDATE_DEVELOPER, "");
+//            insertDeveloper(dev, UPDATE_DEVELOPER);
 //Update skills
 //            pr = connection.prepareStatement(UPDATE_SKILLS_FOR_DEVELOPER);
 //            for (Skill skill : dev.getSkills()) {
@@ -219,7 +230,7 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
 
     private Skill getSkill(ResultSet resultSet) throws SQLException {
         return Skill.builder()
-                .id(resultSet.getInt("id"))
+                .id(resultSet.getLong("id"))
                 .technology(Skill.Technology.valueOf(resultSet.getString("technology")))
                 .seniority(Skill.Seniority.valueOf(resultSet.getString("seniority")))
                 .build();
@@ -229,9 +240,6 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
         return Project.builder()
                 .id(resultSet.getLong("id"))
                 .name(resultSet.getString("name"))
-                .customer(new Customer())
-                .companies(new HashSet<Company>())
-                .developers(new HashSet<Developer>())
                 .build();
     }
 
@@ -240,7 +248,6 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
                 .id(resultSet.getLong("id"))
                 .name(resultSet.getString("name"))
                 .countOfEmployee(resultSet.getInt("count_of_employee"))
-                .projects(new HashSet<Project>())
                 .build();
     }
 }

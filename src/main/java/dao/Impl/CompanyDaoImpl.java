@@ -7,9 +7,7 @@ import model.Project;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class CompanyDaoImpl extends AbstractDao implements CompanyDao {
 
@@ -17,24 +15,43 @@ public class CompanyDaoImpl extends AbstractDao implements CompanyDao {
         super(connection);
     }
 
+    //Need to add projects
     @Override
     public Company findById(Long id) {
         final String SELECT_COMPANY_BY_ID = "SELECT * FROM companies WHERE id=" + id;
+        final String SELECT_ALL_PROJECTS = "SELECT projects.id, projects.name, projects.customer_id\n" +
+                "                FROM projects\n" +
+                "                INNER JOIN companies_projects\n" +
+                "                ON projects.id = companies_projects.project_id\n" +
+                "                INNER JOIN companies\n" +
+                "                ON companies_projects.company_id = companies.id\n" +
+                "                WHERE company_id =" + id + ";";
 
         Company company = null;
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(SELECT_COMPANY_BY_ID);
             if (!resultSet.next()) {
-                return company;
+                System.out.println("Company with id " + id + " doesn't exist: ");
+                return null;
             }
             company = getCompany(resultSet);
+            List<Project> projects = new ArrayList<>();
+            resultSet = statement.executeQuery(SELECT_ALL_PROJECTS);
+            while (resultSet.next()) {
+                projects.add(Project.builder()
+                        .id(resultSet.getLong("id"))
+                        .name(resultSet.getString("name"))
+                        .build());
+            }
+            company.setProjects(projects);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return company;
     }
 
+    //Need to add projects
     @Override
     public List<Company> findAll() {
         final String SELECT_ALL = "SELECT * FROM companies";
@@ -64,16 +81,18 @@ public class CompanyDaoImpl extends AbstractDao implements CompanyDao {
             preparedStatement.setInt(2, company.getCountOfEmployee());
             preparedStatement.execute();
         } catch (SQLException e) {
+            System.out.println("Something goes wrong with Prepared Statement here CompanyDaoImpl.insert()");
             e.printStackTrace();
         }
     }
 
     @Override
     public void update(Company company, Long id) {
-        final String UPDATE_COMPANY = "UPDATE company SET name=?, count_of_employee=?, project_id=? WHERE id=";
+        final String UPDATE_COMPANY = "UPDATE company SET name=?, count_of_employee=?, WHERE id=" + id;
         try {
             insertUpdate(company, UPDATE_COMPANY);
         } catch (SQLException e) {
+            System.out.println("Something goes wrong with Prepared Statement here CompanyDaoImpl.update()");
             e.printStackTrace();
         }
     }
@@ -99,16 +118,14 @@ public class CompanyDaoImpl extends AbstractDao implements CompanyDao {
 
         company.setId(rs.getLong("id"));
         company.setName(rs.getString("name"));
-//        company.setProjects((Set<Project>) rs.getObject("project_id"));
         company.setCountOfEmployee(rs.getInt("count_of_employee"));
         return company;
     }
 
-    private void insertUpdate(Company com, String req) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(req);
+    private void insertUpdate(Company com, String request) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(request);
         preparedStatement.setString(1, com.getName());
         preparedStatement.setInt(2, com.getCountOfEmployee());
-        preparedStatement.setObject(3, com.getProjects());
 
         int i = preparedStatement.executeUpdate();
 

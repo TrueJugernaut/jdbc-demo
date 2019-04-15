@@ -2,7 +2,6 @@ import dao.Impl.*;
 import dao.SkillDao;
 import model.Company;
 import model.Developer;
-import model.Project;
 import model.Skill;
 import service.CompanyService;
 import service.CustomerService;
@@ -15,7 +14,6 @@ import service.ProjectService;
 import util.ConnectionFactory;
 
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -28,44 +26,54 @@ public class Main {
         SkillDao skillDao = new SkillDaoImpl(connection);
 
         Skill skill = Skill.builder()
-                .id(1)
                 .technology(Skill.Technology.C_SHARP)
                 .seniority(Skill.Seniority.MIDDLE)
                 .build();
-        skillDao.insert(skill);
-        System.out.println("NEW SKILL: " + skill.toString());
+
+        Skill skill1 = Skill.builder()
+                .technology(Skill.Technology.OBJECTIVE_C)
+                .seniority(Skill.Seniority.SENIOR)
+                .build();
+        skillDao.insert(skill1);
+        System.out.println("NEW SKILL: " + skillDao.findById(190L).toString());
 
         Company company = Company.builder()
-                .name("Peiko")
+                .name("Пейко")
                 .countOfEmployee(13)
                 .build();
 
+//        int x = 10;
+//        while (x != 0) {
+//            companyService.insert(company);
+//            x--;
+//        }
+
+        System.out.println(companyService.findById(4L).toString());
+        List<Company> companies = companyService.findAll();
+        for (int i = 0; i < companies.size(); i++) {
+            System.out.println(companies.get(i).toString());
+        }
+
+
         Developer developer = Developer.builder()
                 .age(24)
-                .firstName("Yehor")
-                .lastName("Nesterov")
-                .sex("male")
+                .firstName("Егор")
+                .lastName("Нестеров")
+                .sex("муж")
                 .salary(1200.0)
                 .skill(skill)
                 .company(company)
                 .build();
         developerService.insert(developer);
 
-        List<Company> companies = companyService.findAll();
-        for (int i = 0; i < companies.size(); i++) {
-            System.out.println(companies.get(i));
-        }
-
-
-
-        System.out.println(developerService.findById(1L));
+        System.out.println(developerService.findById(678L));
         List<Developer> developers = developerService.findAll();
         for (int i = 0; i < developers.size(); i++) {
             System.out.println(developers.get(i));
         }
 
-        Developer developer1 = developerService.findById(16L);
-        System.out.println(developer1.toString());
+//        Developer developer1 = developerService.findById(1L);
+//        System.out.println(developer1.toString());
 
 
 //        Developer developer1 = Developer.builder()
