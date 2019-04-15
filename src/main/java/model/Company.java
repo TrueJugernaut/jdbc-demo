@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Builder
@@ -15,7 +15,7 @@ public class Company {
     private Long id;
     private String name;
     private Integer countOfEmployee;
-    private Set<Project> projects;
+    private List<Project> projects;
 
     public void addProject(Project project) {
         projects.add(project);

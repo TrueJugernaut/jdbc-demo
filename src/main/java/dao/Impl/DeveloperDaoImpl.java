@@ -227,7 +227,7 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
 
     private Project getProject(ResultSet resultSet) throws SQLException {
         return Project.builder()
-                .id(resultSet.getInt("id"))
+                .id(resultSet.getLong("id"))
                 .name(resultSet.getString("name"))
                 .customer(new Customer())
                 .companies(new HashSet<Company>())

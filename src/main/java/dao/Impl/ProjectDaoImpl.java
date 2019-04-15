@@ -26,6 +26,14 @@ public class ProjectDaoImpl extends AbstractDao implements ProjectDao {
 
     @Override
     public void insert(Project project) {
+        final String INSERT_PROJECT = "INSERT into projects(name, customer_id) VALUES (?, ?)";
+
+        final String SELECT_LAST_PROJECT_INDEX = "SELECT MAX(id) AS id FROM projects";
+
+        final String INSERT_CUSTOMER = "INSERT INTO customers(name, region) VALUES(?, ?)";
+
+        final String INSERT_DEVELOPER_PROJECT =
+                "INSERT INTO developers_projects(developer_id, project_id) VALUES (?, ?)";
 
     }
 

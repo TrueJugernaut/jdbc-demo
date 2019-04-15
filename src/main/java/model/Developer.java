@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -19,7 +19,7 @@ public class Developer {
     private String sex;
     private Double salary;
     private Company company;
-    private Set<Project> projects;
+    private List<Project> projects;
     private Skill skill;
 
     public void addProject(Project project) {
