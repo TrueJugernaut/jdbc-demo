@@ -16,4 +16,14 @@ public class Company {
     private String name;
     private Integer countOfEmployee;
     private List<Project> projects;
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "\n\tid=" + id +
+                ", \n\tname='" + name + '\'' +
+                ", \n\tcountOfEmployee=" + countOfEmployee +
+                ", \n\tprojects=" + projects +
+                "\n}";
+    }
 }

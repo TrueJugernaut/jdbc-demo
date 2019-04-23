@@ -31,4 +31,13 @@ public class Skill {
         MIDDLE,
         SENIOR
     }
+
+    @Override
+    public String toString() {
+        return "Skill{" +
+                "\n\tid=" + id +
+                ", \n\ttechnology=" + technology +
+                ", \n\tseniority=" + seniority +
+                "\n}";
+    }
 }

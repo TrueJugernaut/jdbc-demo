@@ -16,33 +16,35 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
         super(connection);
     }
 
+    //    Single responsibility foul I think
     @Override
     public Developer findById(Long id) {
         final String SELECT_DEVELOPER = "SELECT * FROM developers WHERE id=" + id;
         final String SELECT_SKILL_ID = "SELECT skill_id FROM developers WHERE id=" + id;
         final String SELECT_SKILL = "SELECT * FROM skills WHERE id=";
-        final String SELECT_ALL_PROJECTS_ID = "SELECT * FROM developers_projects WHERE developer_id=" + id;
-        final String SELECT_ALL_PROJECTS = "";
         final String SELECT_COMPANY_ID = "SELECT company_id FROM developers WHERE id=" + id;
         final String SELECT_COMPANY = "SELECT * FROM companies WHERE id=";
+        final String SELECT_ALL_PROJECTS = "SELECT projects.id, projects.name\n" +
+                "                FROM projects\n" +
+                "                INNER JOIN developers_projects\n" +
+                "                ON projects.id = developers_projects.project_id\n" +
+                "                INNER JOIN developers\n" +
+                "                ON developers_projects.developer_id = developers.id\n" +
+                "                WHERE developer_id =" + id + ";";
 
         Developer developer = new Developer();
         Skill skill = new Skill();
         Company company = new Company();
         List<Project> projects = new ArrayList<>();
 
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(SELECT_DEVELOPER);
-            if (!resultSet.next()) return developer;
-            developer = getDeveloper(resultSet);
+            if (!resultSet.next()) developer = getDeveloper(resultSet);
 
 //Select Skill id
             resultSet = statement.executeQuery(SELECT_SKILL_ID);
             long skillId = 0;
             if (resultSet.next()) skillId = resultSet.getLong("skill_id");
-
-            System.out.println("SKILL ID " + skillId);
 
             resultSet = statement.executeQuery(SELECT_SKILL + skillId);
             if (resultSet.next()) developer.setSkill(getSkill(resultSet));
@@ -56,12 +58,11 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
             if (resultSet.next()) developer.setCompany(getCompany(resultSet));
 
 //Select all projects
-            List<Long> ids = new ArrayList<>();
-            resultSet = statement.executeQuery(SELECT_ALL_PROJECTS_ID);
+            resultSet = statement.executeQuery(SELECT_ALL_PROJECTS);
             while (resultSet.next()) {
-                ids.add(resultSet.getLong("project_id"));
+                getProject(resultSet);
             }
-
+            developer.setProjects(projects);
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (NullPointerException e1) {
@@ -73,19 +74,7 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
     @Override
     public List<Developer> findAll() {
         final String SELECT_ALL_DEVELOPERS = "SELECT * FROM developers";
-        List<Developer> developers = new ArrayList<>();
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SELECT_ALL_DEVELOPERS);
-            while (resultSet.next()) {
-                Developer developer = getDeveloper(resultSet);
-                developers.add(developer);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return developers;
+        return getDevelopersBy(SELECT_ALL_DEVELOPERS);
     }
 
 
@@ -94,7 +83,7 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
         final String INSERT_DEVELOPER =
                 "INSERT into developers(age, first_name, last_name, sex, salary, skill_id, company_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        final String SELECT_LAST_DEVELOPER_INDEX = "SELECT MAX(id) FROM developers";
+        final String SELECT_LAST_DEVELOPER_INDEX = "SELECT MAX(id) AS id FROM developers";
 
         final String INSERT_SKILL = "INSERT INTO skills(technology, seniority) VALUES(?, ?)";
 
@@ -120,6 +109,16 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
             pr.execute();
 
 //ADD PROJECT
+            ResultSet resultSet = pr.executeQuery(SELECT_LAST_DEVELOPER_INDEX);
+            resultSet.next();
+            long lastDevId = resultSet.getLong("id");
+
+            pr = connection.prepareStatement(INSERT_DEVELOPER_PROJECT);
+            for (Project project : developer.getProjects()) {
+                pr.setLong(2, project.getId());
+                pr.setLong(1, lastDevId);
+                pr.execute();
+            }
 
             insertDeveloper(developer, INSERT_DEVELOPER);
 
@@ -130,47 +129,33 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
 
 
     @Override
-    public void update(Developer dev, Long id) {
-//
-//        final String UPDATE_DEVELOPER =
-//                "UPDATE developers SET age=?, first_name=?, last_name=?, sex=?, salary=? WHERE id=" + id;
-//        final String UPDATE_SKILLS_FOR_DEVELOPER =
-//                "UPDATE skills SET technology=?, seniority=? WHERE id=?";
-//        try {
-//            insertDeveloper(dev, UPDATE_DEVELOPER);
+    public void update(Developer developer, Long id) {
+
+        final String UPDATE_DEVELOPER =
+                "UPDATE developers SET age=?, first_name=?, last_name=?, sex=?, salary=?, skill_id=?, company_id=? WHERE id=" + id;
+        final String UPDATE_SKILLS_FOR_DEVELOPER =
+                "UPDATE skills SET technology=?, seniority=? WHERE id=" + id;
+        try (PreparedStatement pr = connection.prepareStatement(UPDATE_SKILLS_FOR_DEVELOPER)) {
+            insertDeveloper(developer, UPDATE_DEVELOPER);
 //Update skills
-//            pr = connection.prepareStatement(UPDATE_SKILLS_FOR_DEVELOPER);
-//            for (Skill skill : dev.getSkills()) {
-//                pr.setString(1, String.valueOf(skill.getTechnology()));
-//                pr.setString(2, String.valueOf(skill.getSeniority()));
-//                pr.setLong(3, skill.getId());
-//                pr.execute();
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+            Skill skill = developer.getSkill();
+            Company company = developer.getCompany();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void deleteById(Long id) {
-        final String DELETE_USER_BY_ID =
-                "DELETE FROM developers WHERE id=?";
-        final String DELETE_SKILLS_BY_DEV_ID =
-                "DELETE FROM skills WHERE developer_id=?";
+        final String DELETE_DEVELOPER_BY_ID =
+                "DELETE FROM developers WHERE id=" + id;
         final String DELETE_RELATIONS_WITH_PROJECTS_BY_DEV_ID =
-                "DELETE FROM developers_projects WHERE developer_id=?";
+                "DELETE FROM developers_projects WHERE developer_id=" + id;
 
         try {
-            PreparedStatement pr = connection.prepareStatement(DELETE_SKILLS_BY_DEV_ID);
-            pr.setLong(1, id);
-
-            pr = connection.prepareStatement(DELETE_RELATIONS_WITH_PROJECTS_BY_DEV_ID);
-            pr.setLong(1, id);
-            pr.execute();
-
-            pr = connection.prepareStatement(DELETE_USER_BY_ID);
-            pr.setLong(1, id);
-            pr.execute();
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(DELETE_RELATIONS_WITH_PROJECTS_BY_DEV_ID);
+            statement.executeUpdate(DELETE_DEVELOPER_BY_ID);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -178,16 +163,66 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
 
     @Override
     public void deleteAll() {
-        final String DELETE_USERS =
+        final String DELETE_ALL_DEVELOPERS =
                 "DELETE FROM developers;";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USERS);
-            preparedStatement.execute();
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(DELETE_ALL_DEVELOPERS);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    @Override
+    public List<Developer> findAllByTechnology(Skill.Technology technology) {
+        final String SELECT_ALL_BY_TECHNOLOGY = "SELECT *\n" +
+                "FROM developers\n" +
+                "LEFT JOIN skills ON developers.skill_id = skills.id\n" +
+                "WHERE skills.technology = \"" + technology + "\";";
+        return getDevelopersBy(SELECT_ALL_BY_TECHNOLOGY);
+    }
+
+    @Override
+    public List<Developer> findAllBySeniority(Skill.Seniority seniority) {
+        final String SELECT_ALL_BY_SENIORITY = "SELECT *\n" +
+                "FROM developers\n" +
+                "LEFT JOIN skills ON developers.skill_id = skills.id\n" +
+                "WHERE skills.seniority = \"" + seniority + "\";";
+        return getDevelopersBy(SELECT_ALL_BY_SENIORITY);
+    }
+
+    @Override
+    public List<Developer> findAllByFirstName(String firstName) {
+        final String SELECT_ALL_BY_FIRST_NAME = "SELECT * from developers WHERE first_name=" + firstName;
+        return getDevelopersBy(SELECT_ALL_BY_FIRST_NAME);
+    }
+
+    @Override
+    public List<Developer> findAllByProject(Project project) {
+        final String SELECT_ALL_BY_PROJECT = "SELECT *\n" +
+                "FROM developers\n" +
+                "INNER JOIN developers_projects                \n" +
+                "ON developers.id = developers_projects.developer_id\n" +
+                "INNER JOIN projects\n" +
+                "ON developers_projects.project_id = projects.id\n" +
+                "WHERE project_id ="+ project.getId() +";";
+        return getDevelopersBy(SELECT_ALL_BY_PROJECT);
+    }
+
+    private List<Developer> getDevelopersBy(String query) {
+        List<Developer> developers = new ArrayList<>();
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                Developer developer = getDeveloper(resultSet);
+                developers.add(developer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return developers;
+    }
 
     private void insertDeveloper(Developer developer, String INSERT_DEVELOPER) throws SQLException {
 
@@ -200,12 +235,10 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
         ResultSet resultSet = preparedStatement.executeQuery(SELECT_LAST_SKILL_ID);
         resultSet.next();
         long lastSkillId = resultSet.getLong("id");
-        System.out.println("LAST SKILL ID" + lastSkillId);
 
         ResultSet resultSet1 = preparedStatement.executeQuery(SELECT_LAST_COMPANY_ID);
         resultSet1.next();
         long lastCompanyId = resultSet1.getLong("id");
-        System.out.println("LAST COMPANY ID" + lastCompanyId);
 
         preparedStatement.setInt(1, developer.getAge());
         preparedStatement.setString(2, developer.getFirstName());
@@ -218,7 +251,7 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
     }
 
     private Developer getDeveloper(ResultSet resultSet) throws SQLException {
-        return Developer.builder()
+            return Developer.builder()
                 .id(resultSet.getLong("id"))
                 .age(resultSet.getInt("age"))
                 .firstName(resultSet.getString("first_name"))

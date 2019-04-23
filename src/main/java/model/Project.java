@@ -15,11 +15,20 @@ import java.util.Set;
 public class Project {
     private Long id;
     private String name;
-    private Set<Company> companies;
+    private Double coast;
+    private List<Company> companies;
     private Customer customer;
     private List<Developer> developers;
 
-    public void addDeveloper(Developer developer) {
-        developers.add(developer);
+    @Override
+    public String toString() {
+        return "Project{" +
+                "\n\tid=" + id +
+                ", \n\tname='" + name + '\'' +
+                ", \n\tcoast='" + coast +
+                ", \n\tcompanies=" + companies +
+                ", \n\tcustomer=" + customer +
+                ", \n\tdevelopers=" + developers +
+                "\n}";
     }
 }

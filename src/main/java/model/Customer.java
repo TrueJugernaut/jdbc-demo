@@ -13,13 +13,18 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Customer {
-    private Integer id;
+    private Long id;
     private String name;
     private String region;
     private List<Project> projects;
 
-    public void addProject(Project project) {
-        projects.add(project);
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "\n\tid=" + id +
+                ", \n\tname='" + name + '\'' +
+                ", \n\tregion='" + region + '\'' +
+                ", \n\tprojects=" + projects +
+                "\n}";
     }
-
 }

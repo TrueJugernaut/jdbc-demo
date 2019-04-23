@@ -29,6 +29,7 @@ CREATE TABLE `jdbc_hw`.`projects`
 (
   `id`          INT                                                         NOT NULL AUTO_INCREMENT,
   `name`        VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL,
+  `coast`       INT(11)                                                     NULL,
   `customer_id` INT(11)                                                     NULL,
   PRIMARY KEY (`id`)
 );

@@ -17,7 +17,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Project findById(Long id) {
-        return null;
+        return projectDao.findById(id);
     }
 
     @Override
@@ -27,17 +27,18 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void insert(Project project) {
-
+        projectDao.insert(project);
     }
 
     @Override
     public void update(Project project, Long id) {
+        projectDao.update(project, id);
 
     }
 
     @Override
     public void delete(Long id) {
-
+        projectDao.deleteById(id);
     }
 
     @Override

@@ -2,6 +2,8 @@ package service.Impl;
 
 import dao.DeveloperDao;
 import model.Developer;
+import model.Project;
+import model.Skill;
 import service.DeveloperService;
 
 import java.util.List;
@@ -42,5 +44,25 @@ public class DeveloperServiceImpl implements DeveloperService {
     @Override
     public void deleteAll() {
         developerDao.deleteAll();
+    }
+
+    @Override
+    public List<Developer> findAllByTechnology(Skill.Technology technology) {
+        return developerDao.findAllByTechnology(technology);
+    }
+
+    @Override
+    public List<Developer> findAllBySeniority(Skill.Seniority seniority) {
+        return developerDao.findAllBySeniority(seniority);
+    }
+
+    @Override
+    public List<Developer> findAllByFirstName(String firstName) {
+        return developerDao.findAllByFirstName(firstName);
+    }
+
+    @Override
+    public List<Developer> findAllByProject(Project project) {
+        return developerDao.findAllByProject(project);
     }
 }

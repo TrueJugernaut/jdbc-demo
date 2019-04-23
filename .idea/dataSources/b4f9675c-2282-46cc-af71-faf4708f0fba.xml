@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataSource name="jdbc_hw@localhost">
+<dataSource name="jdbc_test@localhost">
   <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.14">
     <root id="1">
       <ServerVersion>8.0.15</ServerVersion>
@@ -23,11 +23,11 @@
       <Collation>utf8_general_ci</Collation>
     </schema>
     <schema id="7" parent="1" name="jdbc_hw">
-      <Current>1</Current>
-      <Visible>1</Visible>
       <Collation>utf8_general_ci</Collation>
     </schema>
     <schema id="8" parent="1" name="jdbc_test">
+      <Current>1</Current>
+      <Visible>1</Visible>
       <Collation>utf8_general_ci</Collation>
     </schema>
     <schema id="9" parent="1" name="mysql">
@@ -1122,13 +1122,13 @@
       <Charset>utf8mb4</Charset>
       <DefaultForCharset>0</DefaultForCharset>
     </collation>
-    <table id="283" parent="7" name="companies"/>
-    <table id="284" parent="7" name="companies_projects"/>
-    <table id="285" parent="7" name="customers"/>
-    <table id="286" parent="7" name="developers"/>
-    <table id="287" parent="7" name="developers_projects"/>
-    <table id="288" parent="7" name="projects"/>
-    <table id="289" parent="7" name="skills"/>
+    <table id="283" parent="8" name="companies"/>
+    <table id="284" parent="8" name="companies_projects"/>
+    <table id="285" parent="8" name="customers"/>
+    <table id="286" parent="8" name="developers"/>
+    <table id="287" parent="8" name="developers_projects"/>
+    <table id="288" parent="8" name="projects"/>
+    <table id="289" parent="8" name="skills"/>
     <column id="290" parent="283" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
@@ -1138,13 +1138,14 @@
     </column>
     <column id="291" parent="283" name="name">
       <Position>2</Position>
-      <DataType>varchar(45)|0s</DataType>
+      <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="292" parent="283" name="count_of_employee">
       <Position>3</Position>
-      <DataType>int(12)|0s</DataType>
+      <DataType>double|0s</DataType>
+      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
     <key id="293" parent="283" name="PRIMARY">
@@ -1174,14 +1175,14 @@
     </index>
     <foreign-key id="298" parent="284" name="companies_id">
       <ColNames>company_id</ColNames>
-      <RefSchemaName>jdbc_hw</RefSchemaName>
+      <RefSchemaName>jdbc_test</RefSchemaName>
       <RefTableName>companies</RefTableName>
       <RefColNames>id</RefColNames>
       <OnUpdate>cascade</OnUpdate>
     </foreign-key>
     <foreign-key id="299" parent="284" name="projects_id">
       <ColNames>project_id</ColNames>
-      <RefSchemaName>jdbc_hw</RefSchemaName>
+      <RefSchemaName>jdbc_test</RefSchemaName>
       <RefTableName>projects</RefTableName>
       <RefColNames>id</RefColNames>
       <OnUpdate>cascade</OnUpdate>
@@ -1216,41 +1217,41 @@
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="305" parent="286" name="first_name">
+    <column id="305" parent="286" name="age">
       <Position>2</Position>
-      <DataType>varchar(255)|0s</DataType>
-      <NotNull>1</NotNull>
+      <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="306" parent="286" name="last_name">
+    <column id="306" parent="286" name="first_name">
       <Position>3</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="307" parent="286" name="sex">
+    <column id="307" parent="286" name="last_name">
       <Position>4</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="308" parent="286" name="sex">
+      <Position>5</Position>
       <DataType>varchar(45)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="308" parent="286" name="salary">
-      <Position>5</Position>
+    <column id="309" parent="286" name="salary">
+      <Position>6</Position>
       <DataType>double|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="309" parent="286" name="company_id">
-      <Position>6</Position>
-      <DataType>int(11)|0s</DataType>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="310" parent="286" name="skill_id">
+    <column id="310" parent="286" name="company_id">
       <Position>7</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="311" parent="286" name="age">
+    <column id="311" parent="286" name="skill_id">
       <Position>8</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
@@ -1270,14 +1271,14 @@
     </key>
     <foreign-key id="315" parent="286" name="company_id">
       <ColNames>company_id</ColNames>
-      <RefSchemaName>jdbc_hw</RefSchemaName>
+      <RefSchemaName>jdbc_test</RefSchemaName>
       <RefTableName>companies</RefTableName>
       <RefColNames>id</RefColNames>
       <OnUpdate>cascade</OnUpdate>
     </foreign-key>
     <foreign-key id="316" parent="286" name="skill_id">
       <ColNames>skill_id</ColNames>
-      <RefSchemaName>jdbc_hw</RefSchemaName>
+      <RefSchemaName>jdbc_test</RefSchemaName>
       <RefTableName>skills</RefTableName>
       <RefColNames>id</RefColNames>
       <OnUpdate>cascade</OnUpdate>
@@ -1304,14 +1305,14 @@
     </index>
     <foreign-key id="321" parent="287" name="developer_id">
       <ColNames>developer_id</ColNames>
-      <RefSchemaName>jdbc_hw</RefSchemaName>
+      <RefSchemaName>jdbc_test</RefSchemaName>
       <RefTableName>developers</RefTableName>
       <RefColNames>id</RefColNames>
       <OnUpdate>cascade</OnUpdate>
     </foreign-key>
     <foreign-key id="322" parent="287" name="project_id">
       <ColNames>project_id</ColNames>
-      <RefSchemaName>jdbc_hw</RefSchemaName>
+      <RefSchemaName>jdbc_test</RefSchemaName>
       <RefTableName>projects</RefTableName>
       <RefColNames>id</RefColNames>
       <OnUpdate>cascade</OnUpdate>
@@ -1329,47 +1330,52 @@
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="325" parent="288" name="customer_id">
+    <column id="325" parent="288" name="coast">
       <Position>3</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="326" parent="288" name="customers_idx">
+    <column id="326" parent="288" name="customer_id">
+      <Position>4</Position>
+      <DataType>int(11)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="327" parent="288" name="customers_idx">
       <ColNames>customer_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="327" parent="288" name="PRIMARY">
+    <key id="328" parent="288" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="328" parent="288" name="customers">
+    <foreign-key id="329" parent="288" name="customers">
       <ColNames>customer_id</ColNames>
-      <RefSchemaName>jdbc_hw</RefSchemaName>
+      <RefSchemaName>jdbc_test</RefSchemaName>
       <RefTableName>customers</RefTableName>
       <RefColNames>id</RefColNames>
       <OnUpdate>cascade</OnUpdate>
     </foreign-key>
-    <column id="329" parent="289" name="id">
+    <column id="330" parent="289" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="330" parent="289" name="technology">
+    <column id="331" parent="289" name="technology">
       <Position>2</Position>
-      <DataType>varchar(45)|0s</DataType>
+      <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="331" parent="289" name="seniority">
+    <column id="332" parent="289" name="seniority">
       <Position>3</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="332" parent="289" name="PRIMARY">
+    <key id="333" parent="289" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>

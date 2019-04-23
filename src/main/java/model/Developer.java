@@ -22,8 +22,18 @@ public class Developer {
     private List<Project> projects;
     private Skill skill;
 
-    public void addProject(Project project) {
-        projects.add(project);
+    @Override
+    public String toString() {
+        return "Developer {" +
+                "id=" + id +
+                ", \n\tage=" + age +
+                ", \n\tfirstName='" + firstName + '\'' +
+                ", \n\tlastName='" + lastName + '\'' +
+                ", \n\tsex='" + sex + '\'' +
+                ", \n\tsalary=" + salary +
+                ", \n\tcompany=" + company +
+                ", \n\tprojects=" + projects +
+                ", \n\tskill=" + skill +
+                "\n}";
     }
-
 }
