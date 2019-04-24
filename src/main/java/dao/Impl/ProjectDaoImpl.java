@@ -25,22 +25,34 @@ public class ProjectDaoImpl extends AbstractDao implements ProjectDao {
     @Override
     public Project findById(Long id) {
         final String SELECT_PROJECT_BY_ID = "SELECT * FROM projects WHERE id=" + id;
-        final String SELECT_CUSTOMERS_FOR_PROJECT = "SELECT * FROM customers WHERE id=";
-        final String SELECT_ALL_DEVELOPERS_FOR_PROJECT = "";
+        final String SELECT_CUSTOMERS_FOR_PROJECT = "SELECT * FROM customers WHERE id=" + id;
+        final String SELECT_ALL_DEVELOPERS_FOR_PROJECT = "SELECT *\n" +
+                "FROM developers\n" +
+                "INNER JOIN developers_projects\n" +
+                "ON developers.id = developers_projects.developer_id\n" +
+                "INNER JOIN projects\n" +
+                "ON developers_projects.project_id = projects.id\n" +
+                "WHERE project_id = " + id + ";";
 
         Project project = new Project();
-        Customer customer = new Customer();
+        List<Developer> developers = new ArrayList<>();
 
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(SELECT_PROJECT_BY_ID);
+
+            //Sect project
             if (resultSet.next()) project = getProject(resultSet);
 
-            //Select all customers
-            resultSet = statement.executeQuery(SELECT_CUSTOMERS_FOR_PROJECT + project.getId());
+            //Select customer
+            resultSet = statement.executeQuery(SELECT_CUSTOMERS_FOR_PROJECT);
             if (resultSet.next()) project.setCustomer(getCustomer(resultSet));
 
-
+            //Select all developers
+            resultSet = statement.executeQuery(SELECT_ALL_DEVELOPERS_FOR_PROJECT);
+            while (resultSet.next()) {
+                developers.add(getDeveloper(resultSet));
+            }
+            project.setDevelopers(developers);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -96,13 +108,11 @@ public class ProjectDaoImpl extends AbstractDao implements ProjectDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
     }
 
     @Override
     public void update(Project project, Long id) {
-        final String UPDATE_PROJECT = "UPDATE projects SET name=?, coast=?, customer_id=?" + id;
+        final String UPDATE_PROJECT = "UPDATE projects SET name=?, coast=?, customer_id=? WHERE id=" + id;
         try {
             insertUpdate(project, UPDATE_PROJECT);
         } catch (SQLException e) {
@@ -131,21 +141,67 @@ public class ProjectDaoImpl extends AbstractDao implements ProjectDao {
     @Override
     public void addDeveloper(Project project, Developer developer) {
 
+        final String ADD_DEVELOPER_FOR_PROJECT =
+                "INSERT INTO developers_projects (developer_id, project_id) VALUES (?, ?)";
+
+        try (PreparedStatement statement = connection.prepareStatement(ADD_DEVELOPER_FOR_PROJECT)) {
+            statement.setLong(1, developer.getId());
+            statement.setLong(2, project.getId());
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void deleteDeveloper(Project project, Developer developer) {
+    public void deleteDeveloper(Project project) {
 
+        final String DELETE_DEVELOPER_FOR_PROJECT = "DELETE FROM developers_projects WHERE project_id=" + project.getId();
+
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(DELETE_DEVELOPER_FOR_PROJECT);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void setProjectCoast(Project project) {
 
+        final String INSERT_PROJECT_COAST = "UPDATE projects SET coast=? WHERE id=" + project.getId();
+
+        try (PreparedStatement statement = connection.prepareStatement(INSERT_PROJECT_COAST)) {
+            List<Developer> developers = project.getDevelopers();
+            double salary = 0;
+            for (Developer developer : developers) {
+                salary += developer.getSalary();
+            }
+            statement.setDouble(1, salary);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void getProjectCoast(Project project) {
+    public Double getProjectCoast(Long id) {
+        final String SELECT_ALL_SALARY_OF_PROJECT = "SELECT developers.salary\n" +
+                "FROM developers\n" +
+                "INNER JOIN developers_projects\n" +
+                "ON developers.id = developers_projects.developer_id\n" +
+                "INNER JOIN projects\n" +
+                "ON developers_projects.project_id = projects.id\n" +
+                "WHERE project_id = " + id + ";";
 
+        double coast = 0;
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(SELECT_ALL_SALARY_OF_PROJECT);
+            while (resultSet.next()) {
+                coast += resultSet.getDouble("salary");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return coast;
     }
 
     private void insertUpdate(Project project, String INSERT_PROJECT) throws SQLException {
@@ -182,6 +238,17 @@ public class ProjectDaoImpl extends AbstractDao implements ProjectDao {
                 .id(resultSet.getLong("id"))
                 .name(resultSet.getString("name"))
                 .region(resultSet.getString("region"))
+                .build();
+    }
+
+    private Developer getDeveloper(ResultSet resultSet) throws SQLException {
+        return Developer.builder()
+                .id(resultSet.getLong("id"))
+                .age(resultSet.getInt("age"))
+                .firstName(resultSet.getString("first_name"))
+                .lastName(resultSet.getString("last_name"))
+                .sex(resultSet.getString("sex"))
+                .salary(resultSet.getDouble("salary"))
                 .build();
     }
 

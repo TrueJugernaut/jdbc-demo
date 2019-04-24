@@ -10,10 +10,10 @@ public interface ProjectDao extends CruidDao<Project>{
 
     void addDeveloper(Project project, Developer developer);
 
-    void deleteDeveloper(Project project, Developer developer);
+    void deleteDeveloper(Project project);
 
     void setProjectCoast(Project project);
 
-    void getProjectCoast(Project project);
+    Double getProjectCoast(Long id);
 
 }

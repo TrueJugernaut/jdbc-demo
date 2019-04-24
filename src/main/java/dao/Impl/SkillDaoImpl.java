@@ -50,7 +50,6 @@ public class SkillDaoImpl extends AbstractDao implements SkillDao {
             preparedStatement.setString(1, String.valueOf(skill.getTechnology()));
             preparedStatement.setString(2, String.valueOf(skill.getSeniority()));
             preparedStatement.execute();
-
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -16,7 +16,6 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
         super(connection);
     }
 
-    //    Single responsibility foul I think
     @Override
     public Developer findById(Long id) {
         final String SELECT_DEVELOPER = "SELECT * FROM developers WHERE id=" + id;
@@ -205,7 +204,7 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
                 "ON developers.id = developers_projects.developer_id\n" +
                 "INNER JOIN projects\n" +
                 "ON developers_projects.project_id = projects.id\n" +
-                "WHERE project_id ="+ project.getId() +";";
+                "WHERE project_id =" + project.getId() + ";";
         return getDevelopersBy(SELECT_ALL_BY_PROJECT);
     }
 
@@ -251,7 +250,7 @@ public class DeveloperDaoImpl extends AbstractDao implements DeveloperDao {
     }
 
     private Developer getDeveloper(ResultSet resultSet) throws SQLException {
-            return Developer.builder()
+        return Developer.builder()
                 .id(resultSet.getLong("id"))
                 .age(resultSet.getInt("age"))
                 .firstName(resultSet.getString("first_name"))

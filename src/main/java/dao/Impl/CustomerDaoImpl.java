@@ -56,7 +56,6 @@ public class CustomerDaoImpl extends AbstractDao implements CustomerDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return customers;
     }
 
@@ -70,7 +69,6 @@ public class CustomerDaoImpl extends AbstractDao implements CustomerDao {
     public void update(Customer customer, Long id) {
         final String UPDATE_CUSTOMER = "UPDATE customers SET name=?, region=?, WHERE id=" + id;
         customerInsert(customer, UPDATE_CUSTOMER);
-
     }
 
     @Override

@@ -127,7 +127,6 @@ public class CompanyDaoImpl extends AbstractDao implements CompanyDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return company;
     }
 

@@ -45,4 +45,19 @@ public class ProjectServiceImpl implements ProjectService {
     public void addDeveloper(Project project, Developer developer) {
         projectDao.addDeveloper(project, developer);
     }
+
+    @Override
+    public void deleteDeveloper(Project project) {
+        projectDao.deleteDeveloper(project);
+    }
+
+    @Override
+    public void setProjectCoast(Project project) {
+        projectDao.setProjectCoast(project);
+    }
+
+    @Override
+    public Double getProjectCoast(Long id) {
+        return projectDao.getProjectCoast(id);
+    }
 }
